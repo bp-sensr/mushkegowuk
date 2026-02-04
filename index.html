@@ -9,7 +9,7 @@
 <meta name="author" content="Alex MacPhail">
 <meta name="author" content="Jack Creeggan">
 <meta name="author" content="Hope Hill">
-<meta name="dcterms.date" content="2026-01-16">
+<meta name="dcterms.date" content="2026-02-04">
 
 <title>Report on the use of passive acoustic and remote camera monitoring for the Mushkegowuk Council</title>
 <style>
@@ -129,18 +129,24 @@ div.csl-indent {
    
   <ul>
   <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
-  <li><a href="#land-acknowledgement" id="toc-land-acknowledgement" class="nav-link" data-scroll-target="#land-acknowledgement">Land Acknowledgement</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
   <li><a href="#data-collection" id="toc-data-collection" class="nav-link" data-scroll-target="#data-collection">Data collection</a></li>
-  <li><a href="#data-processing" id="toc-data-processing" class="nav-link" data-scroll-target="#data-processing">Data processing</a></li>
+  <li><a href="#data-processing" id="toc-data-processing" class="nav-link" data-scroll-target="#data-processing">Data processing</a>
+  <ul class="collapse">
+  <li><a href="#acoustic-data" id="toc-acoustic-data" class="nav-link" data-scroll-target="#acoustic-data">Acoustic data</a></li>
+  <li><a href="#camera-data" id="toc-camera-data" class="nav-link" data-scroll-target="#camera-data">Camera data</a></li>
+  </ul></li>
   <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a></li>
   </ul></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
-  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a>
+  <ul class="collapse">
+  <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations">Recommendations</a></li>
+  </ul></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="mushkegowuk.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
@@ -188,7 +194,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 16, 2026</p>
+      <p class="date">February 4, 2026</p>
     </div>
   </div>
   
@@ -200,9 +206,10 @@ div.csl-indent {
 </header>
 
 
-<p><img src=".png" class="img-fluid"></p>
+<p><img src="assets/banner.png" class="img-fluid"></p>
 <section id="abstract" class="level1">
 <h1>Abstract</h1>
+<p>In 2025, the Mushkegowuk Council launched a wildlife monitoring program using autonomous recording units (ARUs) for passive acoustic surveying alongside remote cameras for visual detection. This report summarizes the key findings from the initiative and provides recommendations to guide future monitoring efforts.</p>
 <div class="callout callout-style-default callout-note callout-titled" style="background-color: #f4f4f4; padding: 20px;">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -237,17 +244,23 @@ Note
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(image_date_time))</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>mc_locs <span class="ot">&lt;-</span> <span class="fu">wt_get_view</span>(<span class="st">"organization_locations"</span>, <span class="at">organization =</span> <span class="dv">5843</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>mc_locs <span class="ot">&lt;-</span> <span class="fu">wt_get_view</span>(<span class="st">"organization_locations"</span>, <span class="at">organization =</span> <span class="dv">5843</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nation =</span> <span class="fu">case_when</span>(<span class="fu">grepl</span>(<span class="st">"CCFN"</span>, locationName) <span class="sc">~</span> <span class="st">"Chapleau Cree First Nation"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">grepl</span>(<span class="st">"KFN"</span>,  locationName) <span class="sc">~</span> <span class="st">"Kashechewan First Nation"</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">grepl</span>(<span class="st">"MCSM"</span>, locationName) <span class="sc">~</span> <span class="st">"Fort Albany First Nation"</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">grepl</span>(<span class="st">"Wahkohtowin"</span>, locationName) <span class="sc">~</span> <span class="st">""</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                            <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_character_</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sensors =</span> <span class="fu">case_when</span>(recordingCount <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> imageCount <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"ARU + CAM"</span>, </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                             recordingCount <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"ARU"</span>, </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                             imageCount <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"CAM"</span>, </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                             <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_character_</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
-<section id="land-acknowledgement" class="level1">
-<h1>Land Acknowledgement</h1>
-</section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>In 2025, the Mushkegowuk Council initiated a program incorporating autonomous recording units (ARUs) for passive acoustic monitoring of the vocalizing wildlife and remote camera traps for monitoring other wildlife. ARUs are compact environmental sensors that are designed to passively record the environment (<span class="citation" data-cites="aru-overview">Shonfield and Bayne (<a href="#ref-aru-overview" role="doc-biblioref">2017</a>)</span>), capturing vocalizing species like birds and amphibians, which is growing in use across the globe (<span class="citation" data-cites="lots-of-pam">Sugai et al. (<a href="#ref-lots-of-pam" role="doc-biblioref">2018</a>)</span>). This technology enables resource managers to conduct prolonged surveys with minimal human interference. The subsequent data collected by these units contribute valuable information to metrics that can be used to study species trends over time, whereby this data aids decision-making and management within the region. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing. <a href="https://www.wildtrax.ca">WildTrax</a> is an online platform developed by the <a href="https://abmi.ca">Alberta Biodiversity Monitoring Institute (<strong>ABMI</strong>)</a> for users of environmental sensors to help addresses these big data challenges by providing solutions to standardize, harmonize, and share data.</p>
-<p>The report summarizes the data collected from the ARUs by the Mushkegowuk Council in 2025. To enhance accessibility and reproducibility, the findings will be presented in this online report with fully documented code, allowing future updates as data collection methods become standardized. Additionally, recommendations will be developed to refine data transcription priorities, improve annual reporting methods, and evaluate recommendations for long-term monitoring. The objectives of this report are to:</p>
+<p>ARUs and cameras are compact environmental sensors that are designed to passively record the environment. ARUs (<span class="citation" data-cites="aru-overview">Shonfield and Bayne (<a href="#ref-aru-overview" role="doc-biblioref">2017</a>)</span>) capture vocalizing species like birds and amphibians, whereas cameras are mainly designed to detect and medium to large-sized animals. The use of these sensors for environmental monitoring is growing in use across the globe (<span class="citation" data-cites="lots-of-pam">Sugai et al. (<a href="#ref-lots-of-pam" role="doc-biblioref">2018</a>)</span>) as this technology enables resource managers to conduct prolonged surveys with minimal human interference. The subsequent data collected by these units contribute valuable information to metrics that can be used to aid decision-making and management. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing.</p>
+<p>The report summarizes the data collected from the ARUs and cameras deployed by the Mushkegowuk Council in 2025. To enhance accessibility and reproducibility, the findings will be presented in this online report with fully documented code, allowing future updates as data collection methods become standardized. Additionally, recommendations will be developed to refine data transcription priorities, improve annual reporting methods, and evaluate recommendations for long-term monitoring. The objectives of this report are to:</p>
 <ul>
 <li>Document and standardize the data management and processing procedures for acoustic data collected to ensure consistency and reproducibility.</li>
 <li>Provide a comprehensive report detailing all detected species and the abundance of individuals within the surveyed area.</li>
@@ -259,33 +272,47 @@ Note
 <h1>Methods</h1>
 <section id="data-collection" class="level2">
 <h2 class="anchored" data-anchor-id="data-collection">Data collection</h2>
-<p>Locations were …</p>
+<p>A total of 12 were surveyed in 2025 (<a href="#fig-monitoring-locations" class="quarto-xref">Figure&nbsp;1</a>). The list of locations surveyed and the type of sensors placed at each location is also summarized in <a href="#tbl-locations" class="quarto-xref">Table&nbsp;1</a>.</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mc_locs_sf <span class="ot">&lt;-</span> mc_locs <span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(locationName, latitude, longitude, recordingCount, imageCount) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(locationName, latitude, longitude, nation, sensors, recordingCount, imageCount) <span class="sc">|&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(latitude) <span class="sc">|&gt;</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  sf<span class="sc">::</span><span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitude"</span>,<span class="st">"latitude"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircleMarkers</span>(</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> mc_locs,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">"Location:"</span>, locationName, <span class="st">"&lt;br&gt;"</span>),</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fillOpacity =</span> <span class="dv">1</span>,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"black"</span>, </span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">radius =</span> <span class="dv">6</span> </span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMeasure</span>(<span class="at">primaryLengthUnit =</span> <span class="st">"meters"</span>, <span class="at">primaryAreaUnit =</span> <span class="st">"sqmeters"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMiniMap</span>(<span class="at">position =</span> <span class="st">"bottomleft"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">colorFactor</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"ARU"</span> <span class="ot">=</span> <span class="st">"#1f78b4"</span>, <span class="st">"CAM"</span> <span class="ot">=</span> <span class="st">"#33a02c"</span>, <span class="st">"ARU + CAM"</span> <span class="ot">=</span> <span class="st">"#e31a1c"</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">domain  =</span> mc_locs_sf<span class="sc">$</span>sensors</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>(mc_locs_sf) <span class="sc">%&gt;%</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircleMarkers</span>(</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">popup =</span> <span class="sc">~</span><span class="fu">paste0</span>(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      <span class="st">"&lt;b&gt;Location:&lt;/b&gt; "</span>, locationName, <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"&lt;b&gt;Nation:&lt;/b&gt; "</span>, nation, <span class="st">"&lt;br&gt;"</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"&lt;b&gt;Sensors:&lt;/b&gt; "</span>, sensors</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">fillColor   =</span> <span class="sc">~</span><span class="fu">pal</span>(sensors),</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">color       =</span> <span class="st">"black"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">fillOpacity =</span> <span class="dv">1</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">radius      =</span> <span class="dv">6</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addLegend</span>(</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">pal =</span> pal,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="sc">~</span>sensors,</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Sensors"</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMeasure</span>(<span class="at">primaryLengthUnit =</span> <span class="st">"meters"</span>, <span class="at">primaryAreaUnit =</span> <span class="st">"sqmeters"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMiniMap</span>(<span class="at">position =</span> <span class="st">"bottomleft"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div id="fig-monitoring-locations" class="cell-output-display quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-monitoring-locations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-e1fdd7d0508404292d03" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-e1fdd7d0508404292d03">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[47.76443,47.76409,47.977567,47.960409,47.931182,52.01221,52.04649,51.85812,52.21464,52.21791,48.31171,48.31611],[-83.24005,-83.24109,-83.423171,-83.465309,-83.429123,-81.03755,-81.08363,-80.75203999999999,-81.73469,-81.74902,-83.48067,-83.48666],6,null,null,{"interactive":true,"className":"","stroke":true,"color":"black","weight":5,"opacity":0.5,"fill":true,"fillColor":"black","fillOpacity":1},null,null,["Location: CCFN_007 <br>","Location: CCFN_008 <br>","Location: CCFN_017 <br>","Location: CCFN_024 <br>","Location: CCFN_025 <br>","Location: KFN_010 <br>","Location: KFN_012_01 <br>","Location: KFN_012_02 <br>","Location: MCSM019 <br>","Location: MCSM020 <br>","Location: Wahkohtowin_007 <br>","Location: Wahkohtowin_008 <br>"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addMeasure","args":[{"position":"topright","primaryLengthUnit":"meters","primaryAreaUnit":"sqmeters","activeColor":"#ABE67E","completedColor":"#C8F2BE","popupOptions":{"className":"leaflet-measure-resultpopup","autoPanPadding":[10,10]},"captureZIndex":10000,"localization":"en","decPoint":".","thousandsSep":","}]},{"method":"addMiniMap","args":[null,null,"bottomleft",150,150,19,19,-5,false,false,false,false,false,false,{"color":"#ff7800","weight":1,"clickable":false},{"color":"#000000","weight":1,"clickable":false,"opacity":0,"fillOpacity":0},{"hideText":"Hide MiniMap","showText":"Show MiniMap"},[]]}],"limits":{"lat":[47.76409,52.21791],"lng":[-83.48666,-80.75203999999999]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-508404292d03f5f8bc42" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-508404292d03f5f8bc42">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[47.76443,47.76409,47.977567,47.960409,47.931182,52.01221,52.04649,51.85812,52.21464,52.21791,48.31171,48.31611],[-83.24005,-83.24109,-83.423171,-83.465309,-83.429123,-81.03755,-81.08363,-80.75203999999999,-81.73469,-81.74902,-83.48067,-83.48666],6,null,null,{"interactive":true,"className":"","stroke":true,"color":"black","weight":5,"opacity":0.5,"fill":true,"fillColor":["#33A02C","#33A02C","#33A02C","#33A02C","#33A02C","#33A02C","#E31A1C","#E31A1C","#1F78B4","#1F78B4","#E31A1C","#E31A1C"],"fillOpacity":1},null,null,["<b>Location:<\/b> CCFN_007<br><b>Nation:<\/b> Chapleau Cree First Nation<br><b>Sensors:<\/b> ARU + CAM","<b>Location:<\/b> CCFN_008<br><b>Nation:<\/b> Chapleau Cree First Nation<br><b>Sensors:<\/b> ARU + CAM","<b>Location:<\/b> CCFN_017<br><b>Nation:<\/b> Chapleau Cree First Nation<br><b>Sensors:<\/b> ARU + CAM","<b>Location:<\/b> CCFN_024<br><b>Nation:<\/b> Chapleau Cree First Nation<br><b>Sensors:<\/b> ARU + CAM","<b>Location:<\/b> CCFN_025<br><b>Nation:<\/b> Chapleau Cree First Nation<br><b>Sensors:<\/b> ARU + CAM","<b>Location:<\/b> KFN_010<br><b>Nation:<\/b> Kashechewan First Nation<br><b>Sensors:<\/b> ARU + CAM","<b>Location:<\/b> KFN_012_01<br><b>Nation:<\/b> Kashechewan First Nation<br><b>Sensors:<\/b> CAM","<b>Location:<\/b> KFN_012_02<br><b>Nation:<\/b> Kashechewan First Nation<br><b>Sensors:<\/b> CAM","<b>Location:<\/b> MCSM019<br><b>Nation:<\/b> <br><b>Sensors:<\/b> ARU","<b>Location:<\/b> MCSM020<br><b>Nation:<\/b> <br><b>Sensors:<\/b> ARU","<b>Location:<\/b> Wahkohtowin_007<br><b>Nation:<\/b> <br><b>Sensors:<\/b> CAM","<b>Location:<\/b> Wahkohtowin_008<br><b>Nation:<\/b> <br><b>Sensors:<\/b> CAM"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLegend","args":[{"colors":["#1F78B4","#33A02C","#E31A1C"],"labels":["ARU","ARU + CAM","CAM"],"na_color":null,"na_label":"NA","opacity":0.5,"position":"topright","type":"factor","title":"Sensors","extra":null,"layerId":null,"className":"info legend","group":null}]},{"method":"addMeasure","args":[{"position":"topright","primaryLengthUnit":"meters","primaryAreaUnit":"sqmeters","activeColor":"#ABE67E","completedColor":"#C8F2BE","popupOptions":{"className":"leaflet-measure-resultpopup","autoPanPadding":[10,10]},"captureZIndex":10000,"localization":"en","decPoint":".","thousandsSep":","}]},{"method":"addMiniMap","args":[null,null,"bottomleft",150,150,19,19,-5,false,false,false,false,false,false,{"color":"#ff7800","weight":1,"clickable":false},{"color":"#000000","weight":1,"clickable":false,"opacity":0,"fillOpacity":0},{"hideText":"Hide MiniMap","showText":"Show MiniMap"},[]]}],"limits":{"lat":[47.76409,52.21791],"lng":[-83.48666,-80.75203999999999]}},"evals":[],"jsHooks":[]}</script>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-monitoring-locations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Locations from Mushkegowuk Council
@@ -294,15 +321,15 @@ Figure&nbsp;1: Locations from Mushkegowuk Council
 </div>
 </div>
 <div class="cell">
-<div id="tbl-loc-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-locations" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-loc-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Locations surveyed across years. Ones indicated a deployment in that year for that location.
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-locations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Locations surveyed, sensors deployed and total data collected.
 </figcaption>
-<div aria-describedby="tbl-loc-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-locations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-f5f8bc4241dc29eef0c9" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-f5f8bc4241dc29eef0c9">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["CCFN_007","CCFN_008","CCFN_017","CCFN_024","CCFN_025","KFN_010","KFN_012_01","KFN_012_02","MCSM019","MCSM020","Wahkohtowin_007","Wahkohtowin_008"],[2660,2663,2688,2197,2685,3985,null,null,1135,1130,null,null],[220,1531,385,729,1025,2030,111,6485,null,null,415,354],[{"type":"Point","coordinates":[-83.24005,47.76443]},{"type":"Point","coordinates":[-83.24109,47.76409]},{"type":"Point","coordinates":[-83.423171,47.977567]},{"type":"Point","coordinates":[-83.465309,47.960409]},{"type":"Point","coordinates":[-83.429123,47.931182]},{"type":"Point","coordinates":[-81.03755,52.01221]},{"type":"Point","coordinates":[-81.08363,52.04649]},{"type":"Point","coordinates":[-80.75203999999999,51.85812]},{"type":"Point","coordinates":[-81.73469,52.21464]},{"type":"Point","coordinates":[-81.74902,52.21791]},{"type":"Point","coordinates":[-83.48067,48.31171]},{"type":"Point","coordinates":[-83.48666,48.31611]}]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>locationName<\/th>\n      <th>recordingCount<\/th>\n      <th>imageCount<\/th>\n      <th>geometry<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":true,"paging":true,"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"locationName","targets":1},{"name":"recordingCount","targets":2},{"name":"imageCount","targets":3},{"name":"geometry","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-41dc29eef0c90592cf75" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-41dc29eef0c90592cf75">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["CCFN_007","CCFN_008","CCFN_017","CCFN_024","CCFN_025","KFN_010","KFN_012_01","KFN_012_02","MCSM019","MCSM020","Wahkohtowin_007","Wahkohtowin_008"],["Chapleau Cree First Nation","Chapleau Cree First Nation","Chapleau Cree First Nation","Chapleau Cree First Nation","Chapleau Cree First Nation","Kashechewan First Nation","Kashechewan First Nation","Kashechewan First Nation","","","",""],["ARU + CAM","ARU + CAM","ARU + CAM","ARU + CAM","ARU + CAM","ARU + CAM","CAM","CAM","ARU","ARU","CAM","CAM"],[2660,2663,2688,2197,2685,3985,null,null,1135,1130,null,null],[220,1531,385,729,1025,2030,111,6485,null,null,415,354],[47.76443,47.76409,47.977567,47.960409,47.931182,52.01221,52.04649,51.85812,52.21464,52.21791,48.31171,48.31611],[-83.24005,-83.24109,-83.423171,-83.465309,-83.429123,-81.03755,-81.08363,-80.75203999999999,-81.73469,-81.74902,-83.48067,-83.48666]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>locationName<\/th>\n      <th>nation<\/th>\n      <th>sensors<\/th>\n      <th>recordingCount<\/th>\n      <th>imageCount<\/th>\n      <th>latitude<\/th>\n      <th>longitude<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":true,"paging":true,"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[4,5,6,7]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"locationName","targets":1},{"name":"nation","targets":2},{"name":"sensors","targets":3},{"name":"recordingCount","targets":4},{"name":"imageCount","targets":5},{"name":"latitude","targets":6},{"name":"longitude","targets":7}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </figure>
@@ -311,7 +338,10 @@ Table&nbsp;1: Locations surveyed across years. Ones indicated a deployment in th
 </section>
 <section id="data-processing" class="level2">
 <h2 class="anchored" data-anchor-id="data-processing">Data processing</h2>
-<p>Recordings and images were uploaded to WildTrax for processing and can be downloaded from the platform’s Recordings and Image Sets tab.</p>
+<section id="acoustic-data" class="level3">
+<h3 class="anchored" data-anchor-id="acoustic-data">Acoustic data</h3>
+<p>Recordings and images were uploaded to <a href="https://www.wildtrax.ca">WildTrax</a> for processing and can be downloaded from the platform’s Recordings and Image Sets tab. WildTrax is an online platform developed by the <a href="https://abmi.ca">Alberta Biodiversity Monitoring Institute (<strong>ABMI</strong>)</a> for users of environmental sensors to help addresses these big data challenges by providing solutions to standardize, harmonize, and share data.</p>
+<p><img src="assets/imagesets.png" class="img-fluid"></p>
 <div class="callout callout-style-default callout-note callout-titled" style="background-color: #f4f4f4; padding: 20px;">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -324,12 +354,46 @@ Note
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Advanced users can also use <code>wildrtrax</code> with <code>wt_get_sync(api = "organization_recordings", organization = 5843)</code>. Ensure you have correct access to the Organization as these projects are not currently published 2026-01-16.</p>
+<p>Advanced users can also use <code>wildrtrax</code> with <code>wt_get_sync(api = "organization_recordings", organization = 5843)</code>. Ensure you have correct access to the Organization as these projects are not currently published 2026-02-04.</p>
 </div>
 </div>
 </div>
-<p>The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, for each location and year surveyed, four randomly selected recordings were processed for 3-minutes between the hours of 3:00 AM - 7:59 AM (dawn period) and 20:00 - 23:59 PM (dusk period), ideally on four separate dates. Four samples ensures that there is minimum number of samples being able to detect most species. Tags are made using count-removal (see <span class="citation" data-cites="farnsworth2002removal">Farnsworth et al. (<a href="#ref-farnsworth2002removal" role="doc-biblioref">2002</a>)</span>, <span class="citation" data-cites="time-removal">Sólymos et al. (<a href="#ref-time-removal" role="doc-biblioref">2018</a>)</span>) where tags are only made at the time of first detection of each individual heard on the recordings. We also verified that all tags that were created were checked by a second observer (n = ) to ensure accuracy of detections (see <strong>?@tbl-verified</strong>).</p>
-<p>Amphibian abundance was estimated at the time of first detection using the <a href="https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program">North American Amphibian Monitoring Program</a> with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. After the data are processed in WildTrax, the <a href="https://abbiodiversity.github.io/wildrtrax/">wildrtrax</a> package is used to download the data into a standard format prepared for analysis. The <code>wt_download_report</code> function downloads the data directly to a R framework for easy manipulation (see <a href="https://abbiodiversity.github.io/wildrtrax/articles/apis.html">wildrtrax APIs</a>).</p>
+<p>The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, we randomly selected recordings 8 recordings per location. Four were processed for 3-minutes between the hours of 3:00 AM - 7:59 AM (dawn period) and four between 20:00 - 23:59 PM (dusk period), ideally on four separate dates. Each of the selections were also chosen on days that did not have any inclement weather (heavy rain or wind), which would be unfavourable for bird surveys. Four samples ensures that there is minimum number of samples being able to detect most species. Tags are made using count-removal (see <span class="citation" data-cites="farnsworth2002removal">Farnsworth et al. (<a href="#ref-farnsworth2002removal" role="doc-biblioref">2002</a>)</span>, <span class="citation" data-cites="time-removal">Sólymos et al. (<a href="#ref-time-removal" role="doc-biblioref">2018</a>)</span>) where tags are only made at the time of first detection of each individual heard on the recordings. Amphibian abundance was estimated at the time of first detection using the <a href="https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program">North American Amphibian Monitoring Program</a> with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. We also verified that all tags that were created were checked by a second observer to ensure accuracy of detections (<a href="#tbl-verified" class="quarto-xref">Table&nbsp;2</a> and <a href="#tbl-cam-verified" class="quarto-xref">Table&nbsp;3</a>). In addition to human transcription, we also ensured that species were not missed at the location level using additional information from HawkEars (<span class="citation" data-cites="huus2025hawkears">Huus et al. (<a href="#ref-huus2025hawkears" role="doc-biblioref">2025</a>)</span>) and at the task level to avoid false negatives. After the data are processed in WildTrax, the <a href="https://abbiodiversity.github.io/wildrtrax/">wildrtrax</a> package is used to download the data into a standard format prepared for analysis. The <code>wt_download_report</code> function downloads the data directly to a R framework for easy manipulation (see <a href="https://abbiodiversity.github.io/wildrtrax/articles/apis.html">wildrtrax APIs</a>).</p>
+<div class="cell">
+<div id="tbl-verified" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Summary of acoustic verified tags
+</figcaption>
+<div aria-describedby="tbl-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-68901c954b983e9b553e" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-68901c954b983e9b553e">{"x":{"filter":"none","vertical":false,"data":[["1","2","3"],[false,true,null],[27,789,1],[3.3,96.56999999999999,0.12]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Tag is verified<\/th>\n      <th>Count<\/th>\n      <th>Proportion<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":true,"paging":true,"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Tag is verified","targets":1},{"name":"Count","targets":2},{"name":"Proportion","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="camera-data" class="level3">
+<h3 class="anchored" data-anchor-id="camera-data">Camera data</h3>
+<p>Ten camera deployments were tagged by seven different observers using the WildTrax platform. Prior to manual tagging, MegaDetector (<span class="citation" data-cites="beery2023megadetector">Beery (<a href="#ref-beery2023megadetector" role="doc-biblioref">2023</a>)</span>) was run on the deployments to auto-tag images with humans, vehicles, and false detections. Bounding boxes were also placed around suspected detections. Detections of animals were tagged for species, and mammal detections received additional tags for count, age, and sex where identification was possible. In addition to animal species, observers manually tagged images with humans, vehicles, and false detections that MegaDetector failed to tag. Tags of mammal species were independently verified by two separate observers who did not participate in initial tagging. Count, age, and sex tags were also verified along with species, and detections tagged as “Unidentified” were verified in case species could be determined. Tags such as human or vehicle, were not verified. Following species verification, tags were quality checked for typos and logical inconsistencies.</p>
+<div class="cell">
+<div id="tbl-cam-verified" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cam-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Summary of image verified tags
+</figcaption>
+<div aria-describedby="tbl-cam-verified-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-387c727c03dd03f88b27" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-387c727c03dd03f88b27">{"x":{"filter":"none","vertical":false,"data":[["1","2"],[false,true],[12954,543],[95.98,4.02]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Tag is verified<\/th>\n      <th>Count<\/th>\n      <th>Proportion<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":true,"paging":true,"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Tag is verified","targets":1},{"name":"Count","targets":2},{"name":"Proportion","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
 </section>
 <section id="analysis" class="level2">
 <h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
@@ -338,51 +402,189 @@ Note
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
+<p>A total of r length(unique(all_clean$species_common_name)) species were detected across all monitoring sites. Species detections by location are summarized in <a href="#tbl-species-clean" class="quarto-xref">Table&nbsp;4</a>, including the maximum count recorded for each species. No wildlife was detected by camera at Wahkohtowin_007, and only a single detection series of Canada Lynx was recorded at Wahkohtowin_008, consistent with the low diversity values shown in <a href="#fig-shannon" class="quarto-xref">Figure&nbsp;2</a>. The reduced species diversity observed at the northern sites likely reflects broader ecoregional differences, with tundra and James Bay Lowlands habitats supporting fewer species than the warmer, more diverse southern forested regions. Overall, we also observed a modest shift in community composition among nation deployments, as illustrated in <a href="#fig-community" class="quarto-xref">Figure&nbsp;3</a>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mc_aru_clean <span class="ot">&lt;-</span> mc_aru <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wt_tidy_species</span>(<span class="at">remove =</span> <span class="fu">c</span>(<span class="st">"mammal"</span>,<span class="st">"amphibian"</span>,<span class="st">"abiotic"</span>,<span class="st">"insect"</span>,<span class="st">"unknown"</span>), <span class="at">zerofill =</span> F) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(<span class="fu">wt_get_species</span>() <span class="sc">|&gt;</span> <span class="fu">select</span>(species_common_name, species_class, species_order), <span class="at">by =</span> <span class="st">"species_common_name"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, recording_date_time, species_common_name, individual_order) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, species_common_name) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_count =</span> <span class="fu">max</span>(individual_order), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(mc_locs <span class="sc">|&gt;</span> <span class="fu">select</span>(locationName, nation, sensors), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"location"</span> <span class="ot">=</span> <span class="st">"locationName"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(nation, <span class="at">.after =</span> location) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(sensors, <span class="at">.after =</span> nation)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>mc_cam_clean <span class="ot">&lt;-</span> mc_cam <span class="sc">|&gt;</span> </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(species_common_name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"STAFF/SETUP"</span>,<span class="st">"Human"</span>,<span class="st">"NONE"</span>,<span class="st">"All Terrain Vehicle"</span>,<span class="st">"Vehicle"</span>,<span class="st">"Heavy Equipment"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, image_date_time, species_common_name, individual_count) <span class="sc">|&gt;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, species_common_name) <span class="sc">|&gt;</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_count =</span> <span class="fu">max</span>(individual_count), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_count =</span> <span class="fu">as.numeric</span>(<span class="fu">case_when</span>(total_count <span class="sc">==</span> <span class="st">"VNA"</span> <span class="sc">~</span> <span class="st">"1"</span>, <span class="cn">TRUE</span> <span class="sc">~</span> total_count))) <span class="sc">|&gt;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(mc_locs <span class="sc">|&gt;</span> <span class="fu">select</span>(locationName, nation, sensors), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"location"</span> <span class="ot">=</span> <span class="st">"locationName"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(nation, <span class="at">.after =</span> location) <span class="sc">|&gt;</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(sensors, <span class="at">.after =</span> nation)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>all_clean <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(shannon_d_aru, shannon_d_cam)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<div id="tbl-species-clean" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-species-clean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Summary
+</figcaption>
+<div aria-describedby="tbl-species-clean-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-626892504150fa223492" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-626892504150fa223492">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11"],["CCFN_007","CCFN_008","CCFN_017","CCFN_024","CCFN_025","KFN_010","MCSM019","MCSM020","KFN_012_01","KFN_012_02","Wahkohtowin_008"],["Chapleau Cree First Nation","Chapleau Cree First Nation","Chapleau Cree First Nation","Chapleau Cree First Nation","Chapleau Cree First Nation","Kashechewan First Nation","","","Kashechewan First Nation","Kashechewan First Nation",""],["ARU + CAM","ARU + CAM","ARU + CAM","ARU + CAM","ARU + CAM","ARU + CAM","ARU","ARU","CAM","CAM","CAM"],[2,2,1,2,1,1,1,1,null,null,null],[2,3,1,3,null,null,1,2,null,null,null],[1,3,null,null,null,null,null,1,null,null,null],[1,2,1,1,null,null,null,1,null,null,null],[2,1,null,null,null,null,null,null,null,null,null],[1,null,1,3,2,null,null,null,null,null,null],[3,2,2,null,null,null,null,null,null,null,null],[1,3,1,2,1,null,2,3,null,null,null],[3,3,3,2,null,null,null,null,null,null,null],[2,2,null,1,null,null,null,null,null,null,null],[1,null,null,null,null,null,null,null,null,null,null],[1,3,1,1,null,null,1,1,null,null,null],[3,4,4,4,1,1,1,2,null,null,null],[3,3,null,null,null,null,null,null,null,null,null],[2,3,3,5,1,1,5,4,null,null,null],[2,2,1,1,1,null,1,1,null,null,null],[null,1,null,null,1,null,null,null,null,null,null],[null,1,null,null,null,null,null,null,null,null,null],[null,1,1,2,1,null,null,null,null,null,null],[null,4,1,null,1,null,2,3,null,null,null],[null,1,null,null,null,null,1,1,null,null,null],[null,1,1,null,1,null,null,null,null,null,null],[null,1,null,null,null,6,2,3,null,null,null],[null,1,1,null,null,null,null,null,null,null,null],[null,1,null,null,null,3,3,4,null,null,null],[null,1,null,1,null,null,1,null,null,null,null],[null,null,1,2,3,null,null,null,null,null,null],[null,null,2,null,null,1,1,1,null,null,null],[null,null,3,null,null,null,3,2,null,null,null],[null,null,1,1,1,null,1,null,null,null,null],[null,null,1,1,1,null,1,null,null,null,null],[null,null,1,null,null,null,null,null,null,null,null],[null,null,3,null,1,1,3,3,null,null,null],[null,null,2,2,1,2,2,1,null,null,null],[null,null,null,2,null,null,4,3,null,null,null],[null,null,null,2,null,null,null,null,1,1,null],[null,null,null,1,1,null,1,1,null,null,null],[null,null,null,2,2,null,null,null,null,null,null],[null,null,null,1,null,null,null,null,null,null,null],[null,null,null,1,null,null,null,null,null,null,null],[null,null,null,1,1,1,1,1,null,null,null],[null,null,null,2,null,null,null,null,null,null,null],[null,null,null,1,null,null,null,null,null,null,null],[null,null,null,1,null,null,null,null,null,null,null],[null,null,null,null,1,null,null,null,null,null,null],[null,null,null,null,1,null,null,null,null,null,null],[null,null,null,null,1,null,1,null,null,null,null],[null,null,null,null,1,null,null,null,null,null,null],[null,null,null,null,null,2,null,1,null,null,null],[null,null,null,null,null,1,null,null,null,1,null],[null,null,null,null,null,[1,1],null,null,null,null,null],[null,null,null,null,null,1,null,null,null,null,null],[null,null,null,null,null,2,null,null,null,null,null],[null,null,null,null,null,4,null,2,null,null,null],[null,null,null,null,null,1,null,null,null,null,null],[null,null,null,null,null,1,null,2,null,1,null],[null,null,null,null,null,2,null,null,null,null,null],[null,null,null,null,null,[2,1],null,null,null,null,null],[null,null,null,null,null,1,null,null,null,null,null],[null,null,null,null,null,null,1,1,null,null,null],[null,null,null,null,null,null,1,2,null,null,null],[null,null,null,null,null,null,1,null,null,null,null],[null,null,null,null,null,null,2,null,null,null,null],[null,null,null,null,null,null,null,1,null,null,null],[null,null,null,null,null,null,null,1,null,null,null],[null,null,null,null,null,1,null,1,null,null,null],[null,null,null,null,null,null,null,1,null,null,null],[null,null,null,null,null,null,null,1,null,null,null],[null,1,1,1,1,null,null,null,null,null,null],[null,null,1,1,null,null,null,null,null,null,null],[null,null,1,null,null,null,null,null,null,null,null],[null,null,null,1,null,null,null,null,null,null,null],[null,null,null,1,null,null,null,null,null,1,null],[null,null,null,null,null,1,null,null,null,1,null],[null,null,null,null,null,1,null,null,null,1,null],[null,null,null,null,null,1,null,null,null,null,null],[null,null,null,null,null,null,null,null,1,null,null],[null,null,null,null,null,null,null,null,1,null,null],[null,null,null,null,null,null,null,null,1,null,null],[null,null,null,null,null,null,null,null,null,1,null],[null,null,null,null,null,null,null,null,null,1,null],[null,null,null,null,null,null,null,null,null,null,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>location<\/th>\n      <th>nation<\/th>\n      <th>sensors<\/th>\n      <th>American Redstart<\/th>\n      <th>Black-and-white Warbler<\/th>\n      <th>Chestnut-sided Warbler<\/th>\n      <th>Common Loon<\/th>\n      <th>Common Nighthawk<\/th>\n      <th>Golden-crowned Kinglet<\/th>\n      <th>Hermit Thrush<\/th>\n      <th>Magnolia Warbler<\/th>\n      <th>Nashville Warbler<\/th>\n      <th>Northern Parula<\/th>\n      <th>Palm Warbler<\/th>\n      <th>Red-eyed Vireo<\/th>\n      <th>Swainson's Thrush<\/th>\n      <th>Veery<\/th>\n      <th>White-throated Sparrow<\/th>\n      <th>Yellow-rumped Warbler<\/th>\n      <th>Black-capped Chickadee<\/th>\n      <th>Black-throated Blue Warbler<\/th>\n      <th>Blackburnian Warbler<\/th>\n      <th>Cedar Waxwing<\/th>\n      <th>Orange-crowned Warbler<\/th>\n      <th>Ovenbird<\/th>\n      <th>Wilson's Snipe<\/th>\n      <th>Winter Wren<\/th>\n      <th>Yellow Warbler<\/th>\n      <th>Yellow-bellied Sapsucker<\/th>\n      <th>Cape May Warbler<\/th>\n      <th>Common Raven<\/th>\n      <th>Common Yellowthroat<\/th>\n      <th>Dark-eyed Junco<\/th>\n      <th>Ruby-crowned Kinglet<\/th>\n      <th>Spotted Sandpiper<\/th>\n      <th>Swamp Sparrow<\/th>\n      <th>Tennessee Warbler<\/th>\n      <th>Alder Flycatcher<\/th>\n      <th>American Crow<\/th>\n      <th>American Robin<\/th>\n      <th>Bay-breasted Warbler<\/th>\n      <th>Brown Creeper<\/th>\n      <th>Common Goldeneye<\/th>\n      <th>Northern Waterthrush<\/th>\n      <th>Purple Finch<\/th>\n      <th>Red-breasted Nuthatch<\/th>\n      <th>Ruffed Grouse<\/th>\n      <th>Belted Kingfisher<\/th>\n      <th>Chipping Sparrow<\/th>\n      <th>Philadelphia Vireo<\/th>\n      <th>Pine Siskin<\/th>\n      <th>American Bittern<\/th>\n      <th>American Wigeon<\/th>\n      <th>Canada Goose<\/th>\n      <th>Common Grackle<\/th>\n      <th>Nelson's Sparrow<\/th>\n      <th>Red-winged Blackbird<\/th>\n      <th>Rose-breasted Grosbeak<\/th>\n      <th>Sandhill Crane<\/th>\n      <th>Sora<\/th>\n      <th>Tundra Swan<\/th>\n      <th>Yellow-bellied Flycatcher<\/th>\n      <th>Canada Jay<\/th>\n      <th>Least Flycatcher<\/th>\n      <th>Lincoln's Sparrow<\/th>\n      <th>Olive-sided Flycatcher<\/th>\n      <th>Blue-headed Vireo<\/th>\n      <th>Fox Sparrow<\/th>\n      <th>Mallard<\/th>\n      <th>Rusty Blackbird<\/th>\n      <th>Song Sparrow<\/th>\n      <th>Moose<\/th>\n      <th>Black Bear<\/th>\n      <th>Crows, Jays, and Allies<\/th>\n      <th>Coyote<\/th>\n      <th>Unidentified<\/th>\n      <th>Bird<\/th>\n      <th>Ducks, Swans, Geese<\/th>\n      <th>Northern Pintail<\/th>\n      <th>Red Fox<\/th>\n      <th>Snowshoe Hare<\/th>\n      <th>Wolverine<\/th>\n      <th>Great Blue Heron<\/th>\n      <th>Gulls, Terns and allies<\/th>\n      <th>Canada Lynx<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"searching":true,"paging":true,"pageLength":10,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"location","targets":1},{"name":"nation","targets":2},{"name":"sensors","targets":3},{"name":"American Redstart","targets":4},{"name":"Black-and-white Warbler","targets":5},{"name":"Chestnut-sided Warbler","targets":6},{"name":"Common Loon","targets":7},{"name":"Common Nighthawk","targets":8},{"name":"Golden-crowned Kinglet","targets":9},{"name":"Hermit Thrush","targets":10},{"name":"Magnolia Warbler","targets":11},{"name":"Nashville Warbler","targets":12},{"name":"Northern Parula","targets":13},{"name":"Palm Warbler","targets":14},{"name":"Red-eyed Vireo","targets":15},{"name":"Swainson's Thrush","targets":16},{"name":"Veery","targets":17},{"name":"White-throated Sparrow","targets":18},{"name":"Yellow-rumped Warbler","targets":19},{"name":"Black-capped Chickadee","targets":20},{"name":"Black-throated Blue Warbler","targets":21},{"name":"Blackburnian Warbler","targets":22},{"name":"Cedar Waxwing","targets":23},{"name":"Orange-crowned Warbler","targets":24},{"name":"Ovenbird","targets":25},{"name":"Wilson's Snipe","targets":26},{"name":"Winter Wren","targets":27},{"name":"Yellow Warbler","targets":28},{"name":"Yellow-bellied Sapsucker","targets":29},{"name":"Cape May Warbler","targets":30},{"name":"Common Raven","targets":31},{"name":"Common Yellowthroat","targets":32},{"name":"Dark-eyed Junco","targets":33},{"name":"Ruby-crowned Kinglet","targets":34},{"name":"Spotted Sandpiper","targets":35},{"name":"Swamp Sparrow","targets":36},{"name":"Tennessee Warbler","targets":37},{"name":"Alder Flycatcher","targets":38},{"name":"American Crow","targets":39},{"name":"American Robin","targets":40},{"name":"Bay-breasted Warbler","targets":41},{"name":"Brown Creeper","targets":42},{"name":"Common Goldeneye","targets":43},{"name":"Northern Waterthrush","targets":44},{"name":"Purple Finch","targets":45},{"name":"Red-breasted Nuthatch","targets":46},{"name":"Ruffed Grouse","targets":47},{"name":"Belted Kingfisher","targets":48},{"name":"Chipping Sparrow","targets":49},{"name":"Philadelphia Vireo","targets":50},{"name":"Pine Siskin","targets":51},{"name":"American Bittern","targets":52},{"name":"American Wigeon","targets":53},{"name":"Canada Goose","targets":54},{"name":"Common Grackle","targets":55},{"name":"Nelson's Sparrow","targets":56},{"name":"Red-winged Blackbird","targets":57},{"name":"Rose-breasted Grosbeak","targets":58},{"name":"Sandhill Crane","targets":59},{"name":"Sora","targets":60},{"name":"Tundra Swan","targets":61},{"name":"Yellow-bellied Flycatcher","targets":62},{"name":"Canada Jay","targets":63},{"name":"Least Flycatcher","targets":64},{"name":"Lincoln's Sparrow","targets":65},{"name":"Olive-sided Flycatcher","targets":66},{"name":"Blue-headed Vireo","targets":67},{"name":"Fox Sparrow","targets":68},{"name":"Mallard","targets":69},{"name":"Rusty Blackbird","targets":70},{"name":"Song Sparrow","targets":71},{"name":"Moose","targets":72},{"name":"Black Bear","targets":73},{"name":"Crows, Jays, and Allies","targets":74},{"name":"Coyote","targets":75},{"name":"Unidentified","targets":76},{"name":"Bird","targets":77},{"name":"Ducks, Swans, Geese","targets":78},{"name":"Northern Pintail","targets":79},{"name":"Red Fox","targets":80},{"name":"Snowshoe Hare","targets":81},{"name":"Wolverine","targets":82},{"name":"Great Blue Heron","targets":83},{"name":"Gulls, Terns and allies","targets":84},{"name":"Canada Lynx","targets":85}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-cap-location="bottom">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" data-cap-location="bottom"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>shannon_d <span class="ot">&lt;-</span> all_clean <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(location) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, nation, sensors) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> species_common_name, <span class="at">values_from =</span> total_count, <span class="at">values_fill =</span> <span class="dv">0</span>, <span class="at">values_fn =</span> sum) <span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(location<span class="sc">:</span>sensors), <span class="at">names_to =</span> <span class="st">"species"</span>, <span class="at">values_to =</span> <span class="st">"count"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, nation, sensors) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">shannon_index =</span> <span class="fu">diversity</span>(count, <span class="at">index =</span> <span class="st">"shannon"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>shannon_index <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>shannon_d <span class="sc">|&gt;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>location, <span class="at">y=</span>shannon_index, <span class="at">fill=</span>sensors)) <span class="sc">+</span> </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Shannon's Diversity Index"</span>) <span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Location"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-shannon" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shannon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mushkegowuk_files/figure-html/fig-shannon-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shannon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Shannon diversity index at each location
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-cap-location="bottom">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" data-cap-location="bottom"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>wide <span class="ot">&lt;-</span> all_clean <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ns =</span> <span class="fu">case_when</span>(<span class="fu">grepl</span>(<span class="st">'CCFN)|Wahkohtowin'</span>,location) <span class="sc">~</span> <span class="st">"South"</span>, <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"North"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location, nation, sensors, ns) <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> species_common_name, <span class="at">values_from =</span> total_count, <span class="at">values_fill =</span> <span class="dv">0</span>, <span class="at">values_fn =</span> sum)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>wide_env <span class="ot">&lt;-</span> wide <span class="sc">|&gt;</span> <span class="fu">select</span>(location, nation, sensors, ns)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>t3 <span class="ot">&lt;-</span> <span class="fu">rda</span>(wide[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)] <span class="sc">~</span> ns, <span class="at">data =</span> wide_env)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>t3scores <span class="ot">&lt;-</span> <span class="fu">scores</span>(t3, <span class="at">display =</span> <span class="st">"sites"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"site"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(wide_env)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>t3vect <span class="ot">&lt;-</span> <span class="fu">scores</span>(t3, <span class="at">display =</span> <span class="st">"species"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>plot_RDA <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> t3scores, <span class="fu">aes</span>(<span class="at">x =</span> RDA1, <span class="at">y =</span> PC1)) <span class="sc">+</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> t3scores, <span class="fu">aes</span>(<span class="at">x =</span> RDA1, <span class="at">y =</span> PC1, <span class="at">colour =</span> ns), </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">shape =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ellipse</span>(<span class="at">data =</span> t3scores, <span class="fu">aes</span>(<span class="at">colour =</span> ns), </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">linetype =</span> <span class="dv">1</span>, <span class="at">type =</span> <span class="st">'norm'</span>, <span class="at">level =</span> <span class="fl">0.67</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"#A19E99"</span>, <span class="at">linetype =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"#A19E99"</span>, <span class="at">linetype =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data =</span> t3vect, <span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> RDA1, <span class="at">yend =</span> PC1), </span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>               <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">"cm"</span>)), <span class="at">size =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="at">data =</span> t3vect, <span class="fu">aes</span>(<span class="at">x =</span> RDA1, <span class="at">y =</span> PC1, <span class="at">label =</span> <span class="fu">rownames</span>(t3vect)), </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fontface =</span> <span class="st">"italic"</span>, </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>                  <span class="at">max.overlaps =</span> <span class="dv">10</span>, </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>                  <span class="at">segment.color =</span> <span class="st">"grey70"</span>) <span class="sc">+</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_viridis_d</span>(<span class="at">option =</span> <span class="st">"cividis"</span>, <span class="at">end =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"RDA1"</span>, <span class="at">y =</span> <span class="st">"PC1"</span>, <span class="at">title =</span> <span class="st">"Species associations per nation"</span>, </span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>       <span class="at">colour =</span> <span class="st">"Nation"</span>) <span class="sc">+</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, </span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>), </span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">9</span>), </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"bold"</span>))</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>plot_RDA</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-community" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-community-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mushkegowuk_files/figure-html/fig-community-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-community-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Species associations for the northern and southern half of the region
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="discussion" class="level1">
 <h1>Discussion</h1>
-<p>To ensure the integrity and consistency of a long-term monitoring program, it is important to maintain a consistent survey schedule and timing each year when deploying ARUs. This consistency helps reduce variation caused by seasonal differences in species presence or activity. Additionally, the importance of regular maintenance and calibration of ARU equipment, particularly microphones, which degrade over time and can affect data quality if not properly managed after prolonged field use (see <span class="citation" data-cites="arus-mics">Turgeon, Wilgenburg, and Drake (<a href="#ref-arus-mics" role="doc-biblioref">2017</a>)</span>). Surveying locations with a history of monitoring over multiple years is key to tracking changes in species composition and detecting long-term trends. By including sites with both high and low species diversity, we can better understand how habitats and species ranges are shifting over time. Sites where species-at-risk are present are also prioritized to support conservation efforts. Together, these considerations inform the prioritized list of key sampling sites across the Muskegowuk Council region, as summarized in Table <a href="#tbl-prioritization" class="quarto-xref">Table&nbsp;2</a>.</p>
+<section id="recommendations" class="level2">
+<h2 class="anchored" data-anchor-id="recommendations">Recommendations</h2>
+<p>For acoustic sites, it is important to ensure independence of sampling locations to ensure that detections can be inferred in a spatially independent way. CCFN_007 and CCFN_008 were placed &lt;100 m from one another, meaning that the acoustic sampling area each ARU was sampling was likely overlapping, similar and not independent due to the effective detection radius of the ARUs. In a passive acoustic monitoring context, a minimum distance of 300 m is recommended. To ensure the integrity and consistency of a long-term monitoring program, it is important to maintain a consistent survey schedule and timing each year when deploying ARUs. This consistency helps reduce variation caused by seasonal differences in species presence or activity. Additionally, the importance of regular maintenance and calibration of ARU equipment, particularly microphones, which degrade over time and can affect data quality if not properly managed after prolonged field use (see <span class="citation" data-cites="arus-mics">Turgeon, Wilgenburg, and Drake (<a href="#ref-arus-mics" role="doc-biblioref">2017</a>)</span>). Surveying locations with a history of monitoring over multiple years is key to tracking changes in species composition and detecting long-term trends.</p>
+<p>Cameras should be deployed and oriented to maximize detection probability while minimizing obstructions and false triggers. Camera‐trap studies consistently show that vegetation blockage, poor sightlines, and inappropriate angles can substantially reduce wildlife detections and bias monitoring results. Cameras should therefore be placed along likely travel corridors (e.g., trails, habitat edges, riparian crossings) with clear views of the detection zone, and nearby grasses or branches should be trimmed up to 5 meters to prevent regular wind-driven triggers. Placement height (standard height of 1.5 meters) and angle (90 degrees or straight ahead) should be standardized for target species, and cameras should avoid facing open water or dense vegetation where movement and glare (i.e.&nbsp;facing cameras north) can reduce image quality and increase non-target captures. Implementing these best practices will improve detection consistency across sites and strengthen future occupancy and community assessments.</p>
+<p>By including sites with both high and low species diversity, we can better understand how habitats and species ranges are shifting over time. Sites where species-at-risk are present are also prioritized to support conservation efforts. Together, these considerations inform the prioritized list of key sampling sites across the Mushkegowuk Council region, as summarized in <a href="#tbl-prioritization" class="quarto-xref">Table&nbsp;5</a>.</p>
 <div id="tbl-prioritization" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-prioritization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;2: Prioritization
+Table&nbsp;5: Prioritization
 </figcaption>
 <div aria-describedby="tbl-prioritization-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>repeat_priority <span class="ot">&lt;-</span> locs_summary <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">priority =</span> <span class="fu">sum</span>(<span class="fu">c_across</span>(<span class="st">`</span><span class="at">2022</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2024</span><span class="st">`</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>priority)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>rich_priority <span class="ot">&lt;-</span> spp_rich_location <span class="sc">|&gt;</span> <span class="fu">group_by</span>(location) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">priority =</span> <span class="fu">mean</span>(species_count)) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>priority)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>soi_priority <span class="ot">&lt;-</span> mc_main <span class="sc">|&gt;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species_common_name <span class="sc">%in%</span> soi) <span class="sc">|&gt;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, latitude, longitude, recording_date_time, species_common_name)  <span class="sc">|&gt;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location) <span class="sc">|&gt;</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">priority =</span> <span class="fu">n_distinct</span>(species_common_name))</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>prioritization_matrix <span class="ot">&lt;-</span> repeat_priority <span class="sc">|&gt;</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">location =</span> Location) <span class="sc">|&gt;</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(rich_priority, <span class="at">by =</span> <span class="st">"location"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_repeat"</span>, <span class="st">"_rich"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(soi_priority, <span class="at">by =</span> <span class="st">"location"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"_soi"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">priority_repeat =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(priority_repeat), <span class="dv">0</span>, priority_repeat),</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">priority_rich =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(priority_rich), <span class="dv">0</span>, priority_rich),</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">priority =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(priority), <span class="dv">0</span>, priority)</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">combined_priority =</span> priority_repeat <span class="sc">*</span> <span class="dv">2</span> <span class="sc">+</span> priority_rich <span class="sc">+</span> priority) <span class="sc">|&gt;</span> <span class="co"># Created a weighted-sum</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, combined_priority) <span class="sc">|&gt;</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>combined_priority)</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(prioritization_matrix, </span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>          <span class="at">options =</span> <span class="fu">list</span>(</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>            <span class="at">searching =</span> <span class="cn">TRUE</span>,  </span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>            <span class="at">paging =</span> <span class="cn">TRUE</span>,    </span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>            <span class="at">pageLength =</span> <span class="dv">10</span>   </span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>          ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>repeat_priority <span class="ot">&lt;-</span> locs_summary <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">priority =</span> <span class="fu">sum</span>(<span class="fu">c_across</span>(<span class="st">`</span><span class="at">2022</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2024</span><span class="st">`</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>priority)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>rich_priority <span class="ot">&lt;-</span> spp_rich_location <span class="sc">|&gt;</span> <span class="fu">group_by</span>(location) <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="at">priority =</span> <span class="fu">mean</span>(species_count)) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="sc">-</span>priority)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>soi_priority <span class="ot">&lt;-</span> mc_main <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species_common_name <span class="sc">%in%</span> soi) <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, latitude, longitude, recording_date_time, species_common_name)  <span class="sc">|&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location) <span class="sc">|&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">priority =</span> <span class="fu">n_distinct</span>(species_common_name))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>prioritization_matrix <span class="ot">&lt;-</span> repeat_priority <span class="sc">|&gt;</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">location =</span> Location) <span class="sc">|&gt;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(rich_priority, <span class="at">by =</span> <span class="st">"location"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_repeat"</span>, <span class="st">"_rich"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(soi_priority, <span class="at">by =</span> <span class="st">"location"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"_soi"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">priority_repeat =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(priority_repeat), <span class="dv">0</span>, priority_repeat),</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">priority_rich =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(priority_rich), <span class="dv">0</span>, priority_rich),</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">priority =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(priority), <span class="dv">0</span>, priority)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">combined_priority =</span> priority_repeat <span class="sc">*</span> <span class="dv">2</span> <span class="sc">+</span> priority_rich <span class="sc">+</span> priority) <span class="sc">|&gt;</span> <span class="co"># Created a weighted-sum</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location, combined_priority) <span class="sc">|&gt;</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>combined_priority)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="fu">datatable</span>(prioritization_matrix, </span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>          <span class="at">options =</span> <span class="fu">list</span>(</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>            <span class="at">searching =</span> <span class="cn">TRUE</span>,  </span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>            <span class="at">paging =</span> <span class="cn">TRUE</span>,    </span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>            <span class="at">pageLength =</span> <span class="dv">10</span>   </span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>          ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </figure>
@@ -390,16 +592,11 @@ Table&nbsp;2: Prioritization
 <p>As this monitoring is led by Indigenous communities, it is guided by local knowledge, values, and priorities to protect the land and wildlife. By combining new technologies and sampling technique with traditional knowledge, the program contributes to building a comprehensive, long-term understanding of biodiversity in the region. Ongoing monitoring will help track the impacts of climate change. This information will help to support communities in protecting their environment and cultural connections while strengthening resilience for the future.</p>
 
 </section>
+</section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-abrahms2023climate" class="csl-entry" role="listitem">
 Abrahms, Briana, Neil H Carter, TJ Clark-Wolf, Kaitlyn M Gaynor, Erik Johansson, Alex McInturff, Anna C Nisi, Kasim Rafiq, and Leigh West. 2023. <span>“Climate Change as a Global Amplifier of Human–Wildlife Conflict.”</span> <em>Nature Climate Change</em> 13 (3): 224–34.
-</div>
-<div id="ref-ackleh2010measuring" class="csl-entry" role="listitem">
-Ackleh, Azmy S, Jacoby Carter, Lauren Cole, Tom Nguyen, Jay Monte, and Claire Pettit. 2010. <span>“Measuring and Modeling the Seasonal Changes of an Urban Green Treefrog (Hyla Cinerea) Population.”</span> <em>Ecological Modelling</em> 221 (2): 281–89.
-</div>
-<div id="ref-akaike1974" class="csl-entry" role="listitem">
-Akaike, Hirotugu. 1974. <span>“A New Look at the Statistical Model Identification.”</span> <em>IEEE Transactions on Automatic Control</em> 19 (6): 716–23. <a href="https://doi.org/10.1109/TAC.1974.1100705">https://doi.org/10.1109/TAC.1974.1100705</a>.
 </div>
 <div id="ref-allan2017recent" class="csl-entry" role="listitem">
 Allan, James R, Oscar Venter, Sean Maxwell, Bastian Bertzky, Kendall Jones, Yichuan Shi, and James EM Watson. 2017. <span>“Recent Increases in Human Pressure and Forest Loss Threaten Many Natural World Heritage Sites.”</span> <em>Biological Conservation</em> 206: 47–55.
@@ -407,20 +604,11 @@ Allan, James R, Oscar Venter, Sean Maxwell, Bastian Bertzky, Kendall Jones, Yich
 <div id="ref-Anderson2001" class="csl-entry" role="listitem">
 Anderson, Marti J. 2001. <span>“A New Method for Non-Parametric Multivariate Analysis of Variance.”</span> <em>Austral Ecology</em> 26 (1): 32–46. <a href="https://doi.org/10.1111/j.1442-9993.2001.01070.pp.x">https://doi.org/10.1111/j.1442-9993.2001.01070.pp.x</a>.
 </div>
-<div id="ref-bates2015parsimonious" class="csl-entry" role="listitem">
-Bates, Douglas, Reinhold Kliegl, Shravan Vasishth, and Harald Baayen. 2015. <span>“Parsimonious Mixed Models.”</span> <em>arXiv Preprint arXiv:1506.04967</em>.
-</div>
-<div id="ref-bates2015lme4" class="csl-entry" role="listitem">
-Bates, Douglas, Martin Mächler, Ben Bolker, and Steve Walker. 2015. <span>“Fitting Linear Mixed-Effects Models Using <span class="nocase">lme4</span>.”</span> <em>Journal of Statistical Software</em> 67 (1): 1–48. <a href="https://doi.org/10.18637/jss.v067.i01">https://doi.org/10.18637/jss.v067.i01</a>.
+<div id="ref-beery2023megadetector" class="csl-entry" role="listitem">
+Beery, Sara. 2023. <span>“The MegaDetector: Large-Scale Deployment of Computer Vision for Conservation and Biodiversity Monitoring.”</span> <em>California Institute of Technology, Pasadena, CA, USA</em>.
 </div>
 <div id="ref-vis-scan-amphs" class="csl-entry" role="listitem">
 Cameron, J., A. Crosby, C. Paszkowski, and E. Bayne. 2020. <span>“Visual Spectrogram Scanning Paired with an Observation–Confirmation Occupancy Model Improves the Efficiency and Accuracy of Bioacoustic Anuran Data.”</span> <em>Canadian Journal of Zoology</em> 98 (11): 733–42. <a href="https://doi.org/10.1139/cjz-2020-0103">https://doi.org/10.1139/cjz-2020-0103</a>.
-</div>
-<div id="ref-dawood2017spatio" class="csl-entry" role="listitem">
-Dawood, Muhammad. 2017. <span>“Spatio-Statistical Analysis of Temperature Fluctuation Using Mann–Kendall and Sen’s Slope Approach.”</span> <em>Climate Dynamics</em> 48 (3): 783–97.
-</div>
-<div id="ref-devarajan2020multi" class="csl-entry" role="listitem">
-Devarajan, Kadambari, Toni Lyn Morelli, and Simone Tenan. 2020. <span>“Multi-Species Occupancy Models: Review, Roadmap, and Recommendations.”</span> <em>Ecography</em> 43 (11): 1612–24.
 </div>
 <div id="ref-fahrig2003effects" class="csl-entry" role="listitem">
 Fahrig, Lenore. 2003. <span>“Effects of Habitat Fragmentation on Biodiversity.”</span> <em>Annual Review of Ecology, Evolution, and Systematics</em> 34 (1): 487–515.
@@ -428,47 +616,14 @@ Fahrig, Lenore. 2003. <span>“Effects of Habitat Fragmentation on Biodiversity.
 <div id="ref-farnsworth2002removal" class="csl-entry" role="listitem">
 Farnsworth, George L, Kenneth H Pollock, James D Nichols, Theodore R Simons, James E Hines, and John R Sauer. 2002. <span>“A Removal Model for Estimating Detection Probabilities from Point-Count Surveys.”</span> <em>The Auk</em> 119 (2): 414–25.
 </div>
-<div id="ref-gahbauer2022projected" class="csl-entry" role="listitem">
-Gahbauer, Marcel A, Scott R Parker, Joanna X Wu, Cavan Harpur, Brooke L Bateman, Darroch M Whitaker, Douglas P Tate, Lotem Taylor, and Denis Lepage. 2022. <span>“Projected Changes in Bird Assemblages Due to Climate Change in a Canadian System of Protected Areas.”</span> <em>Plos One</em> 17 (1): e0262116.
-</div>
-<div id="ref-aru-vs-cams-wolves" class="csl-entry" role="listitem">
-Garland, Laura, Andrew Crosby, Richard Hedley, Stan Boutin, and Erin Bayne. 2020. <span>“Acoustic Vs. Photographic Monitoring of Gray Wolves (<span class="nocase">Canis lupus</span>): A Methodological Comparison of Two Passive Monitoring Techniques.”</span> <em>Canadian Journal of Zoology</em> 98 (3): 219–28. <a href="https://doi.org/10.1139/cjz-2019-0081">https://doi.org/10.1139/cjz-2019-0081</a>.
-</div>
-<div id="ref-hamed2009" class="csl-entry" role="listitem">
-Hamed, K. H. 2009. <span>“Exact Distribution of the Mann-Kendall Trend Test Statistic for Persistent Data.”</span> <em>Journal of Hydrology</em> 365 (1): 86–94. <a href="https://doi.org/10.1016/j.jhydrol.2009.01.040">https://doi.org/10.1016/j.jhydrol.2009.01.040</a>.
-</div>
-<div id="ref-hamed1998" class="csl-entry" role="listitem">
-Hamed, K. H., and A. Ramachandra Rao. 1998. <span>“A Modified Mann-Kendall Trend Test for Autocorrelated Data.”</span> <em>Journal of Hydrology</em> 204 (1): 182–96. <a href="https://doi.org/10.1016/S0022-1694(97)00125-X">https://doi.org/10.1016/S0022-1694(97)00125-X</a>.
-</div>
-<div id="ref-handel2004alaska" class="csl-entry" role="listitem">
-Handel, C. M., and M. N. Cady. 2004. <span>“Alaska Landbird Monitoring Survey: Protocol for Setting up and Conducting Point Count Surveys.”</span> Technical Report 2004-3. Alaska Science Center: U.S. Geological Survey.
-</div>
 <div id="ref-hanski2011habitat" class="csl-entry" role="listitem">
 Hanski, Ilkka. 2011. <span>“Habitat Loss, the Dynamics of Biodiversity, and a Perspective on Conservation.”</span> <em>Ambio</em> 40 (3): 248–55.
 </div>
-<div id="ref-kendall1975" class="csl-entry" role="listitem">
-Kendall, Maurice G. 1975. <em>Multivariate Analysis</em>. Charles Griffin &amp; Company Ltd.
-</div>
-<div id="ref-knight2019classification" class="csl-entry" role="listitem">
-Knight, Elly C, and Erin M Bayne. 2019. <span>“Classification Threshold and Training Data Affect the Quality and Utility of Focal Species Data Processed with Automated Audio-Recognition Software.”</span> <em>Bioacoustics</em> 28 (6): 539–54.
-</div>
-<div id="ref-laliberte2010adistance" class="csl-entry" role="listitem">
-Laliberté, Etienne, and Pierre Legendre. 2010. <span>“A Distance-Based Framework for Measuring Functional Diversity from Multiple Traits.”</span> <em>Ecology</em> 91: 299–305.
-</div>
-<div id="ref-FDpackage" class="csl-entry" role="listitem">
-Laliberté, Etienne, Pierre Legendre, and Bill Shipley. 2014. <em>FD: Measuring Functional Diversity from Multiple Traits, and Other Tools for Functional Ecology</em>.
+<div id="ref-huus2025hawkears" class="csl-entry" role="listitem">
+Huus, Jan, Kevin G Kelly, Erin M Bayne, and Elly C Knight. 2025. <span>“HawkEars: A Regional, High-Performance Avian Acoustic Classifier.”</span> <em>Ecological Informatics</em> 87: 103122.
 </div>
 <div id="ref-lemieux2011state" class="csl-entry" role="listitem">
 Lemieux, Christopher J, Thomas J Beechey, Daniel J Scott, and Paul A Gray. 2011. <span>“The State of Climate Change Adaptation in Canada’s Protected Areas Sector.”</span> <em>The Canadian Geographer/Le G<span>é</span>ographe Canadien</em> 55 (3): 301–17.
-</div>
-<div id="ref-Loeb_2015" class="csl-entry" role="listitem">
-Loeb, Susan C., Thomas J. Rodhouse, Laura E. Ellison, Cori L. Lausen, Jonathan D. Reichard, Kathryn M. Irvine, Thomas E. Ingersoll, et al. 2015. <em>A Plan for the North American Bat Monitoring Program (NABat)</em>. U.S. Department of Agriculture, Forest Service, Southern Research Station. <a href="https://doi.org/10.2737/srs-gtr-208">https://doi.org/10.2737/srs-gtr-208</a>.
-</div>
-<div id="ref-Loeb2015" class="csl-entry" role="listitem">
-Loeb, Susan C., Thomas J. Rodhouse, Lee E. Ellison, et al. 2015. <em>A Plan for the North American Bat Monitoring Program (NABat)</em>. Asheville, NC: U.S. Department of Agriculture, Forest Service, Southern Research Station. <a href="https://doi.org/10.1898/NWN21-10">https://doi.org/10.1898/NWN21-10</a>.
-</div>
-<div id="ref-lovett2013peepers" class="csl-entry" role="listitem">
-Lovett, Gary M. 2013. <span>“When Do Peepers Peep? Climate and the Date of First Calling in the Spring Peeper (Pseudacris Crucifer) in Southeastern New York State.”</span> <em>Northeastern Naturalist</em> 20 (2): 333–40.
 </div>
 <div id="ref-occu-fit" class="csl-entry" role="listitem">
 MacKenzie, Darryl I., and Larissa L. Bailey. 2004. <span>“Assessing the Fit of Site-Occupancy Models.”</span> <em>Journal of Agricultural, Biological, and Environmental Statistics</em> 9 (3): 300–318. <a href="http://www.jstor.org/stable/1400484">http://www.jstor.org/stable/1400484</a>.
@@ -482,17 +637,8 @@ MacKenzie, Darryl I, James D Nichols, Gideon B Lachman, Sam Droege, J Andrew Roy
 <div id="ref-mackenzie2009modeling" class="csl-entry" role="listitem">
 MacKenzie, Darryl I, James D Nichols, Mark E Seamans, and RJ Gutiérrez. 2009. <span>“Modeling Species Occurrence Dynamics with Multiple States and Imperfect Detection.”</span> <em>Ecology</em> 90 (3): 823–35.
 </div>
-<div id="ref-mann1945non" class="csl-entry" role="listitem">
-Mann, H. B. 1945a. <span>“Non-Parametric Tests Against Trend.”</span> <em>Econometrica: Journal of the Econometric Society</em> 13 (3): 245–59.
-</div>
-<div id="ref-mann1945" class="csl-entry" role="listitem">
-———. 1945b. <span>“Nonparametric Tests Against Trend.”</span> <em>Econometrica</em> 13 (3): 245–59. <a href="https://doi.org/10.1017/CBO9781107415324.004">https://doi.org/10.1017/CBO9781107415324.004</a>.
-</div>
 <div id="ref-mantyka2012interactions" class="csl-entry" role="listitem">
 Mantyka-pringle, Chrystal S, Tara G Martin, and Jonathan R Rhodes. 2012. <span>“Interactions Between Climate and Habitat Loss Effects on Biodiversity: A Systematic Review and Meta-Analysis.”</span> <em>Global Change Biology</em> 18 (4): 1239–52.
-</div>
-<div id="ref-segmented2008" class="csl-entry" role="listitem">
-Muggeo, Vito M. R. 2008. <span>“Segmented: An r Package to Fit Regression Models with Broken-Line Relationships.”</span> <em>R News</em> 8 (1): 20–25. <a href="https://cran.r-project.org/doc/Rnews/">https://cran.r-project.org/doc/Rnews/</a>.
 </div>
 <div id="ref-oksanen2010canonical" class="csl-entry" role="listitem">
 Oksanen, Jari, Frank G Blanchet, Roeland Kindt, Pierre Legendre, Peter R Minchin, Robert B O’Hara, Gavin L Simpson, et al. 2010. <span>“Canonical Analysis of Principal Coordinates: A Useful Method of Constrained Ordination for Ecology.”</span> <em>Ecology</em> 92 (3): 597–611. <a href="https://doi.org/10.1890/10-0340.1">https://doi.org/10.1890/10-0340.1</a>.
@@ -500,56 +646,14 @@ Oksanen, Jari, Frank G Blanchet, Roeland Kindt, Pierre Legendre, Peter R Minchin
 <div id="ref-vegan2025" class="csl-entry" role="listitem">
 Oksanen, Jari, Gavin L. Simpson, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter R. Minchin, R. B. O’Hara, et al. 2025. <em>Vegan: Community Ecology Package</em>. <a href="https://vegandevs.github.io/vegan/">https://vegandevs.github.io/vegan/</a>.
 </div>
-<div id="ref-onoz2012" class="csl-entry" role="listitem">
-Önöz, B., and M. Bayazit. 2012. <span>“The Power of Statistical Tests for Trend Detection.”</span> <em>Hydrological Processes</em> 26 (17): 2809–14. <a href="https://doi.org/10.1002/hyp.8438">https://doi.org/10.1002/hyp.8438</a>.
-</div>
-<div id="ref-Petrikeev2019analysis" class="csl-entry" role="listitem">
-Petrikeev, Michael. 2019. <span>“Forest Breeding Bird Abundance and Composition, Kluane National Park Reserve.”</span>
-</div>
-<div id="ref-rao1982diversity" class="csl-entry" role="listitem">
-Rao, C. R. 1982. <span>“Diversity and Dissimilarity Coefficients: A Unified Approach.”</span> <em>Theoretical Population Biology</em> 21 (1): 24–43.
-</div>
-<div id="ref-Rao1964" class="csl-entry" role="listitem">
-Rao, C. Radhakrishna. 1964. <span>“The Use and Interpretation of Principal Component Analysis in Applied Research.”</span> <em>Sankhya: The Indian Journal of Statistics, Series A</em> 26 (4): 329–58.
-</div>
-<div id="ref-Reichert2018" class="csl-entry" role="listitem">
-Reichert, B., C. Lausen, S. Loeb, et al. 2018. <em>A Guide to Processing Bat Acoustic Data for the North American Bat Monitoring Program (NABat)</em>. U.S. Geological Survey. <a href="https://doi.org/10.1898/NWN21-10">https://doi.org/10.1898/NWN21-10</a>.
-</div>
-<div id="ref-reichert2018guide" class="csl-entry" role="listitem">
-Reichert, Brian, Cori Lausen, Susan Loeb, Ted Weller, Ryan Allen, Eric Britzke, Tara Hohoff, et al. 2018. <span>“A Guide to Processing Bat Acoustic Data for the North American Bat Monitoring Program (NABat).”</span> US Geological Survey.
-</div>
 <div id="ref-sattar2021review" class="csl-entry" role="listitem">
 Sattar, Q, ME Maqbool, R Ehsan, S Akhtar, Q Sattar, ME Maqbool, R Ehsan, and S Akhtar. 2021. <span>“Review on Climate Change and Its Effect on Wildlife and Ecosystem.”</span> <em>Open J Environ Biol</em> 6 (1): 008–14.
-</div>
-<div id="ref-sen1968" class="csl-entry" role="listitem">
-Sen, P. K. 1968. <span>“Estimates of the Regression Coefficient Based on Kendall’s Tau.”</span> <em>Journal of the American Statistical Association</em> 63 (324): 1379–89. <a href="https://doi.org/10.2307/2285891">https://doi.org/10.2307/2285891</a>.
-</div>
-<div id="ref-Sen01121968" class="csl-entry" role="listitem">
-Sen, Pranab Kumar. 1968. <span>“Estimates of the Regression Coefficient Based on Kendall’s Tau.”</span> <em>Journal of the American Statistical Association</em> 63 (324): 1379–89. <a href="https://doi.org/10.1080/01621459.1968.10480934">https://doi.org/10.1080/01621459.1968.10480934</a>.
 </div>
 <div id="ref-shannon1948mathematical" class="csl-entry" role="listitem">
 Shannon, Claude Elwood. 1948. <span>“A Mathematical Theory of Communication.”</span> <em>The Bell System Technical Journal</em> 27 (3): 379–423.
 </div>
 <div id="ref-aru-overview" class="csl-entry" role="listitem">
 Shonfield, Julia, and Erin M Bayne. 2017. <span>“Autonomous Recording Units in Avian Ecological Research: Current Use and Future Applications.”</span> <em>Avian Conservation &amp; Ecology</em> 12 (1).
-</div>
-<div id="ref-shonfield2018utility" class="csl-entry" role="listitem">
-Shonfield, Julia, Sarah Heemskerk, and Erin M Bayne. 2018. <span>“Utility of Automated Species Recognition for Acoustic Monitoring of Owls.”</span> <em>Journal of Raptor Research</em> 52 (1): 42–55.
-</div>
-<div id="ref-Slough2022" class="csl-entry" role="listitem">
-Slough, B., C. Lausen, B. Paterson, et al. 2022. <span>“New Records about the Diversity, Distribution, and Seasonal Activity Patterns by Bats in Yukon and Northwestern British Columbia.”</span> <em>Northwest Naturalist</em> 103: 162–82. <a href="https://doi.org/10.1898/NWN21-10">https://doi.org/10.1898/NWN21-10</a>.
-</div>
-<div id="ref-slough2023little" class="csl-entry" role="listitem">
-Slough, Brian G, Donald G Reid, Dafna S Schultz, and Maria C-Y Leung. 2023. <span>“Little Brown Bat Activity Patterns and Conservation Implications in Agricultural Landscapes in Boreal Yukon, Canada.”</span> <em>Ecosphere</em> 14 (3): e4446.
-</div>
-<div id="ref-smith2015change" class="csl-entry" role="listitem">
-Smith, Adam C, Marie-Anne R Hudson, Constance M Downes, and Charles M Francis. 2015. <span>“Change Points in the Population Trends of Aerial-Insectivorous Birds in North America: Synchronized in Time Across Species and Regions.”</span> <em>PloS One</em> 10 (7): e0130768.
-</div>
-<div id="ref-Solick2022" class="csl-entry" role="listitem">
-Solick, Daniel I. 2022. <span>“Bat Acoustic Species-Pair Matrix for Western u.s./Canada.”</span> Colorado: Vesper Bat Detection Services.
-</div>
-<div id="ref-solick2022coat" class="csl-entry" role="listitem">
-Solick, Donald I, and Robert MR Barclay. 2022. <span>“Coat Color of Western Long-Eared Bats (Myotis Evotis) Living in Different Environments: A Test of Gloger’s Rule.”</span> <em>Northwestern Naturalist</em> 103 (2): 183–89.
 </div>
 <div id="ref-solymos2012conditional" class="csl-entry" role="listitem">
 Sólymos, Péter, Subhash Lele, and Erin Bayne. 2012. <span>“Conditional Likelihood Approach for Analyzing Single Visit Abundance Survey Data in the Presence of Zero Inflation and Detection Error.”</span> <em>Environmetrics</em> 23 (2): 197–205. https://doi.org/<a href="https://doi.org/10.1002/env.1149">https://doi.org/10.1002/env.1149</a>.
@@ -560,17 +664,8 @@ Sólymos, Péter, Steven M Matsuoka, Erin M Bayne, Subhash R Lele, Patricia Font
 <div id="ref-time-removal" class="csl-entry" role="listitem">
 Sólymos, Péter, Steven M. Matsuoka, Steven G. Cumming, Diana Stralberg, Patricia Fontaine, Fiona K. A. Schmiegelow, Samantha J. Song, and Erin M. Bayne. 2018. <span>“<span class="nocase">Evaluating time-removal models for estimating availability of boreal birds during point count surveys: Sample size requirements and model complexity</span>.”</span> <em>The Condor</em> 120 (4): 765–86. <a href="https://doi.org/10.1650/CONDOR-18-32.1">https://doi.org/10.1650/CONDOR-18-32.1</a>.
 </div>
-<div id="ref-Szewczak2024western_na_bat_acoustic_table" class="csl-entry" role="listitem">
-Sonobat. n.d. <span>“Western North America Bat Acoustic Table.”</span> <a href="https://sonobat.com/download/Western_NA_Bat_Acoustic_Table.pdf" class="uri">https://sonobat.com/download/Western_NA_Bat_Acoustic_Table.pdf</a>.
-</div>
 <div id="ref-lots-of-pam" class="csl-entry" role="listitem">
 Sugai, Larissa Sayuri Moreira, Thiago Sanna Freire Silva, Jr Ribeiro José Wagner, and Diego Llusia. 2018. <span>“<span class="nocase">Terrestrial Passive Acoustic Monitoring: Review and Perspectives</span>.”</span> <em>BioScience</em> 69 (1): 15–25. <a href="https://doi.org/10.1093/biosci/biy147">https://doi.org/10.1093/biosci/biy147</a>.
-</div>
-<div id="ref-birds6010014" class="csl-entry" role="listitem">
-Suthar, Akshit R., Alan R. Biggs, and James T. Anderson. 2025. <span>“A Decadal Change in Shorebird Populations in Response to Temperature, Wind, and Precipitation at Hilton Head Island, South Carolina, USA.”</span> <em>Birds</em> 6 (1). <a href="https://www.mdpi.com/2673-6004/6/1/14">https://www.mdpi.com/2673-6004/6/1/14</a>.
-</div>
-<div id="ref-Szewczak2018" class="csl-entry" role="listitem">
-Szewczak, Joe. 2018. <span>“Acoustic Features of Western US Bats.”</span> Arcata, California: Humboldt State University.
 </div>
 <div id="ref-arus-mics" class="csl-entry" role="listitem">
 Turgeon, Patrick, Steven L. Van Wilgenburg, and Kiel L. Drake. 2017. <span>“Microphone Variability and Degradation: Implications for Monitoring Programs Employing Autonomous Recording Units.”</span> <em>Avian Conservation and Ecology</em> 12. <a href="https://api.semanticscholar.org/CorpusID:89959184">https://api.semanticscholar.org/CorpusID:89959184</a>.
