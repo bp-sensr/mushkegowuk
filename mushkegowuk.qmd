@@ -33,7 +33,7 @@ styles: styles.css
 github: https://github.com/biodiversitypathways/mushkegowuk
 ---
 
-![](assets/mushkegowukbanner.png)
+![](assets/banner.png)
 
 ```{r}
 #| label: load-packages and authenticate
@@ -52,6 +52,7 @@ library(kableExtra)
 library(plotly)
 library(DT)
 library(vegan)
+library(ggrepel)
 
 wt_auth()
 
@@ -61,7 +62,7 @@ load('mushkegowuk.RData')
 
 # Abstract
 
-In 2025, the Mushkegowuk Council initiated a program incorporating autonomous recording units (ARUs) for passive acoustic monitoring of the vocalizing wildlife and remote camera traps for monitoring other wildlife. This report details the results found and provides recommendations for future monitoring applications.
+In 2025, the Mushkegowuk Council launched a wildlife monitoring program using autonomous recording units (ARUs) for passive acoustic surveying alongside remote cameras for visual detection. This report summarizes the key findings from the initiative and provides recommendations to guide future monitoring efforts.
 
 ::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
 This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.
@@ -118,7 +119,7 @@ The report summarizes the data collected from the ARUs and cameras deployed by t
 
 ## Data collection
 
-A total of `r unique(mc_locs$locationName)` were surveyed in 2025 (@fig-monitoring-locations). The list of locations surveyed and the type of sensors placed at each location is also summarized in @tbl-locations.
+A total of `r length(unique(mc_locs$locationName))` were surveyed in 2025 (@fig-monitoring-locations). The list of locations surveyed and the type of sensors placed at each location is also summarized in @tbl-locations.
 
 ```{r}
 #| warning: false
@@ -200,11 +201,73 @@ Recordings and images were uploaded to [WildTrax](https://www.wildtrax.ca) for p
 Advanced users can also use `wildrtrax` with `wt_get_sync(api = "organization_recordings", organization = 5843)`. Ensure you have correct access to the Organization as these projects are not currently published `r Sys.Date()`.
 :::
 
-The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, we randomly selected recordings 8 recordings per location. Four were processed for 3-minutes between the hours of 3:00 AM - 7:59 AM (dawn period) and four between 20:00 - 23:59 PM (dusk period), ideally on four separate dates. Each of the selections were also chosen on days that did not have any inclement weather (heavy rain or wind), which would be unfavourable for bird surveys. Four samples ensures that there is minimum number of samples being able to detect most species. Tags are made using count-removal (see @farnsworth2002removal, @time-removal) where tags are only made at the time of first detection of each individual heard on the recordings. Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. We also verified that all tags that were created were checked by a second observer to ensure accuracy of detections (see @tbl-verified). In addition to human transcription, we also ensured that species were not missed at the location level using additional information from HawkEars (@huus2025hawkears) and at the task level to avoid false negatives. After the data are processed in WildTrax, the [wildrtrax](https://abbiodiversity.github.io/wildrtrax/) package is used to download the data into a standard format prepared for analysis. The `wt_download_report` function downloads the data directly to a R framework for easy manipulation (see [wildrtrax APIs](https://abbiodiversity.github.io/wildrtrax/articles/apis.html)).
+The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, we randomly selected recordings 8 recordings per location. Four were processed for 3-minutes between the hours of 3:00 AM - 7:59 AM (dawn period) and four between 20:00 - 23:59 PM (dusk period), ideally on four separate dates. Each of the selections were also chosen on days that did not have any inclement weather (heavy rain or wind), which would be unfavourable for bird surveys. Four samples ensures that there is minimum number of samples being able to detect most species. Tags are made using count-removal (see @farnsworth2002removal, @time-removal) where tags are only made at the time of first detection of each individual heard on the recordings. Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. We also verified that all tags that were created were checked by a second observer to ensure accuracy of detections (@tbl-verified and @tbl-cam-verified). In addition to human transcription, we also ensured that species were not missed at the location level using additional information from HawkEars (@huus2025hawkears) and at the task level to avoid false negatives. After the data are processed in WildTrax, the [wildrtrax](https://abbiodiversity.github.io/wildrtrax/) package is used to download the data into a standard format prepared for analysis. The `wt_download_report` function downloads the data directly to a R framework for easy manipulation (see [wildrtrax APIs](https://abbiodiversity.github.io/wildrtrax/articles/apis.html)).
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| label: tbl-verified
+#| collapse: true
+#| tbl-cap: Summary of acoustic verified tags
+
+all_tags <- mc_aru |>
+  tally() |>
+  pull()
+
+verified_tags <- mc_aru |>
+  group_by(tag_is_verified) |>
+  tally() |>
+  ungroup() |>
+  mutate(Proportion = round(n / all_tags,4)*100) |>
+  rename("Count" = n) |>
+  rename("Tag is verified" = tag_is_verified)
+
+datatable(verified_tags, 
+          options = list(
+            searching = TRUE,  
+            paging = TRUE,    
+            pageLength = 10   
+          ))
+
+```
 
 ### Camera data
 
-Ten camera deployments were tagged by seven different observers using the WildTrax platform. Prior to manual tagging, MegaDetector (@beery2023megadetector) was run on the deployments to auto-tag images with humans, vehicles, and false detections. Bounding boxes were also placed around suspected detections. Detections of animals were tagged for species, and mammal detections received additional tags for count, age, and sex where identification was possible. In addition to animal species, observers manually tagged images with humans, vehicles, and false detections that MegaDetector failed to tag. Tags of mammal species were independently verified by two separate observers who did not participate in initial tagging. Count, age, and sex tags were also verified along with species, and detections tagged as “Unidentified” were verified in case species could be determined. Following species verification, tags were quality checked for typos and logical inconsistencies.
+Ten camera deployments were tagged by seven different observers using the WildTrax platform. Prior to manual tagging, MegaDetector (@beery2023megadetector) was run on the deployments to auto-tag images with humans, vehicles, and false detections. Bounding boxes were also placed around suspected detections. Detections of animals were tagged for species, and mammal detections received additional tags for count, age, and sex where identification was possible. In addition to animal species, observers manually tagged images with humans, vehicles, and false detections that MegaDetector failed to tag. Tags of mammal species were independently verified by two separate observers who did not participate in initial tagging. Count, age, and sex tags were also verified along with species, and detections tagged as “Unidentified” were verified in case species could be determined. Tags such as human or vehicle, were not verified. Following species verification, tags were quality checked for typos and logical inconsistencies.
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| label: tbl-cam-verified
+#| collapse: true
+#| tbl-cap: Summary of image verified tags
+
+all_cam_tags <- mc_cam |>
+  tally() |>
+  pull()
+
+verified_cam_tags <- mc_cam |>
+  group_by(tag_is_verified) |>
+  tally() |>
+  ungroup() |>
+  mutate(Proportion = round(n / all_cam_tags,4)*100) |>
+  rename("Count" = n) |>
+  rename("Tag is verified" = tag_is_verified)
+
+datatable(verified_cam_tags, 
+          options = list(
+            searching = TRUE,  
+            paging = TRUE,    
+            pageLength = 10   
+          ))
+
+```
 
 ## Analysis
 
@@ -212,9 +275,18 @@ To evaluate species richness and activity patterns, we grouped the data by year 
 
 # Results
 
-```{r}
+A total of r length(unique(all_clean$species_common_name)) species were detected across all monitoring sites. Species detections by location are summarized in @tbl-species-clean, including the maximum count recorded for each species. No wildlife was detected by camera at Wahkohtowin_007, and only a single detection series of Canada Lynx was recorded at Wahkohtowin_008, consistent with the low diversity values shown in @fig-shannon. The reduced species diversity observed at the northern sites likely reflects broader ecoregional differences, with tundra and James Bay Lowlands habitats supporting fewer species than the warmer, more diverse southern forested regions. Overall, we also observed a modest shift in community composition among nation deployments, as illustrated in @fig-community.
 
-shannon_d_aru <- mc_aru |> 
+```{r}
+#| warning: false
+#| echo: true
+#| eval: true
+#| message: false
+#| include: true
+#| results: hide
+#| code-fold: true
+
+mc_aru_clean <- mc_aru |> 
   wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = F) |>
   inner_join(wt_get_species() |> select(species_common_name, species_class, species_order), by = "species_common_name") |>
   select(location, recording_date_time, species_common_name, individual_order) |>
@@ -225,7 +297,7 @@ shannon_d_aru <- mc_aru |>
   relocate(nation, .after = location) |>
   relocate(sensors, .after = nation)
 
-shannon_d_cam <- mc_cam |> 
+mc_cam_clean <- mc_cam |> 
   filter(!(species_common_name %in% c("STAFF/SETUP","Human","NONE","All Terrain Vehicle","Vehicle","Heavy Equipment"))) |>
   select(location, image_date_time, species_common_name, individual_count) |>
   distinct() |>
@@ -236,15 +308,27 @@ shannon_d_cam <- mc_cam |>
   relocate(nation, .after = location) |>
   relocate(sensors, .after = nation)
 
-shannon_d <- bind_rows(shannon_d_aru, shannon_d_cam) |>
-  arrange(location) |>
-  group_by(location, nation, sensors) |>
-  pivot_wider(names_from = species_common_name, values_from = total_count, values_fill = 0, values_fn = sum) |>
-  pivot_longer(cols = -c(location:sensors), names_to = "species", values_to = "count") |>
-  group_by(location) |>
-  summarise(shannon_index = diversity(count, index = "shannon")) |>
-  ungroup()
+all_clean <- bind_rows(shannon_d_aru, shannon_d_cam)
   
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| label: tbl-species-clean
+#| collapse: true
+#| tbl-cap: Summary
+
+datatable(all_clean |> pivot_wider(names_from = species_common_name, values_from = total_count), 
+          options = list(
+            searching = TRUE,  
+            paging = TRUE,    
+            pageLength = 10   
+          ))
+
 ```
 
 ```{r}
@@ -260,20 +344,90 @@ shannon_d <- bind_rows(shannon_d_aru, shannon_d_cam) |>
 #| cap-location: bottom
 #| code-fold: true
 
+shannon_d <- all_clean |>
+  arrange(location) |>
+  group_by(location, nation, sensors) |>
+  pivot_wider(names_from = species_common_name, values_from = total_count, values_fill = 0, values_fn = sum) |>
+  pivot_longer(cols = -c(location:sensors), names_to = "species", values_to = "count") |>
+  group_by(location, nation, sensors) |>
+  summarise(shannon_index = diversity(count, index = "shannon")) |>
+  ungroup() |>
+  filter(!shannon_index == 0)
+
 shannon_d |>
-  ggplot(aes(x=location, y=shannon_index, colour=sensors)) + 
-  geom_point()
+  ggplot(aes(x=location, y=shannon_index, fill=sensors)) + 
+  geom_bar(stat = "identity", alpha = 0.7) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylab("Shannon's Diversity Index") +
+  xlab("Location")
+
+```
+
+```{r}
+#| warning: false
+#| echo: true
+#| eval: true
+#| message: false
+#| include: true
+#| results: hide
+#| fig-align: center
+#| fig-cap: Species associations for the northern and southern half of the region
+#| label: fig-community
+#| cap-location: bottom
+#| code-fold: true
+
+wide <- all_clean |>
+  distinct() |>
+  mutate(ns = case_when(grepl('CCFN)|Wahkohtowin',location) ~ "South", TRUE ~ "North")) |>
+  group_by(location, nation, sensors, ns) |>
+  pivot_wider(names_from = species_common_name, values_from = total_count, values_fill = 0, values_fn = sum)
+
+wide_env <- wide |> select(location, nation, sensors, ns)
+
+t3 <- rda(wide[,-c(1:4)] ~ ns, data = wide_env)
+t3scores <- scores(t3, display = "sites") |>
+  as.data.frame() |>
+  rownames_to_column("site") |>
+  bind_cols(wide_env)
+t3vect <- scores(t3, display = "species") |>
+  as.data.frame()
+
+plot_RDA <- ggplot(data = t3scores, aes(x = RDA1, y = PC1)) +
+  geom_point(data = t3scores, aes(x = RDA1, y = PC1, colour = ns), 
+             alpha = 0.7, size = 3, shape = 16) +
+  stat_ellipse(data = t3scores, aes(colour = ns), 
+               linetype = 1, type = 'norm', level = 0.67, size = 1) +
+  geom_vline(xintercept = 0, color = "#A19E99", linetype = 2, size = 1) +
+  geom_hline(yintercept = 0, color = "#A19E99", linetype = 2, size = 1) +
+  geom_segment(data = t3vect, aes(x = 0, y = 0, xend = RDA1, yend = PC1), 
+               arrow = arrow(length = unit(0.2, "cm")), size = 0.3) +
+  geom_text_repel(data = t3vect, aes(x = RDA1, y = PC1, label = rownames(t3vect)), 
+                  size = 3, colour = "black", fontface = "italic", 
+                  max.overlaps = 10, 
+                  segment.color = "grey70") +
+  theme_bw() +
+  scale_colour_viridis_d(option = "cividis", end = 0.9) +
+  labs(x = "RDA1", y = "PC1", title = "Species associations per nation", 
+       colour = "Nation") +
+  theme(legend.position = "right", 
+        legend.title = element_text(size = 10), 
+        legend.text = element_text(size = 9), 
+        plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
+
+plot_RDA
+
 ```
 
 # Discussion
 
 ## Recommendations
 
-### Location and survey metadata
+For acoustic sites, it is important to ensure independence of sampling locations to ensure that detections can be inferred in a spatially independent way. CCFN_007 and CCFN_008 were placed <100 m from one another, meaning that the acoustic sampling area each ARU was sampling was likely overlapping, similar and not independent due to the effective detection radius of the ARUs. In a passive acoustic monitoring context, a minimum distance of 300 m is recommended. To ensure the integrity and consistency of a long-term monitoring program, it is important to maintain a consistent survey schedule and timing each year when deploying ARUs. This consistency helps reduce variation caused by seasonal differences in species presence or activity. Additionally, the importance of regular maintenance and calibration of ARU equipment, particularly microphones, which degrade over time and can affect data quality if not properly managed after prolonged field use (see @arus-mics). Surveying locations with a history of monitoring over multiple years is key to tracking changes in species composition and detecting long-term trends.
 
-It is important to ensure independence of sampling locations to ensure that detections can be inferred in a spatially independent way. CCFN_007 and CCFN_008 were placed <100 m from one another, meaning that the acoustic sampling area each ARU was sampling was likely overlapping, similar and not independent due to the effective detection radius of the ARUs. In a passive acoustic monitoring context, a minimum distance of 300 m is recommended.
+Cameras should be deployed and oriented to maximize detection probability while minimizing obstructions and false triggers. Camera‐trap studies consistently show that vegetation blockage, poor sightlines, and inappropriate angles can substantially reduce wildlife detections and bias monitoring results. Cameras should therefore be placed along likely travel corridors (e.g., trails, habitat edges, riparian crossings) with clear views of the detection zone, and nearby grasses or branches should be trimmed up to 5 meters to prevent regular wind-driven triggers. Placement height (standard height of 1.5 meters) and angle (90 degrees or straight ahead) should be standardized for target species, and cameras should avoid facing open water or dense vegetation where movement and glare (i.e. facing cameras north) can reduce image quality and increase non-target captures. Implementing these best practices will improve detection consistency across sites and strengthen future occupancy and community assessments.
 
-To ensure the integrity and consistency of a long-term monitoring program, it is important to maintain a consistent survey schedule and timing each year when deploying ARUs. This consistency helps reduce variation caused by seasonal differences in species presence or activity. Additionally, the importance of regular maintenance and calibration of ARU equipment, particularly microphones, which degrade over time and can affect data quality if not properly managed after prolonged field use (see @arus-mics). Surveying locations with a history of monitoring over multiple years is key to tracking changes in species composition and detecting long-term trends. By including sites with both high and low species diversity, we can better understand how habitats and species ranges are shifting over time. Sites where species-at-risk are present are also prioritized to support conservation efforts. Together, these considerations inform the prioritized list of key sampling sites across the Muskegowuk Council region, as summarized in Table @tbl-prioritization.
+By including sites with both high and low species diversity, we can better understand how habitats and species ranges are shifting over time. Sites where species-at-risk are present are also prioritized to support conservation efforts. Together, these considerations inform the prioritized list of key sampling sites across the Muskegowuk Council region, as summarized in @tbl-prioritization.
 
 ```{r}
 #| warning: false
