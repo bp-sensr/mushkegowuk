@@ -189,6 +189,33 @@ datatable(mc_locs_sf |> mutate(
           ))
 ```
 
+```{r}
+
+mc_recs <- wt_get_view("organization_recordings", organization = 5843)
+
+aru_spp <- mc_aru |>
+  group_by(location, species_code) |>
+  tally()
+
+he_detect <- mc_recs |>
+  select(locationName, recordingDate, hawkEarSpeciesIds) |>
+  mutate(recordingDate = as.POSIXct(recordingDate, format = "%Y-%m-%dT%H:%M:%S")) |>
+  unnest_longer(hawkEarSpeciesIds) |>
+  inner_join(wt_get_species() |> select(species_id, species_code), by = c("hawkEarSpeciesIds" = "species_id")) |>
+  select(locationName, species_code) |> 
+  distinct()
+
+he_only <- he_detect %>%
+  # make sure column names match for joining
+  rename(location = locationName) %>%
+  anti_join(aru_spp, by = c("location", "species_code")) |>
+  left_join(project_spp, by = "species_code") |>
+  filter(!included == FALSE)
+
+project_spp <- wt_get_project_species(3919)
+
+```
+
 ## Data processing
 
 ### Acoustic data
@@ -275,7 +302,7 @@ To evaluate species richness and activity patterns, we grouped the data by year 
 
 # Results
 
-A total of r length(unique(all_clean$species_common_name)) species were detected across all monitoring sites. Species detections by location are summarized in @tbl-species-clean, including the maximum count recorded for each species. No wildlife was detected by camera at Wahkohtowin_007, and only a single detection series of Canada Lynx was recorded at Wahkohtowin_008, consistent with the low diversity values shown in @fig-shannon. The reduced species diversity observed at the northern sites likely reflects broader ecoregional differences, with tundra and James Bay Lowlands habitats supporting fewer species than the warmer, more diverse southern forested regions. Overall, we also observed a modest shift in community composition among nation deployments, as illustrated in @fig-community.
+A total of `r length(unique(all_clean$species_common_name))` species were detected across all monitoring sites. Species detections by location are summarized in @tbl-species-clean, including the maximum count recorded for each species. No wildlife was detected by camera at Wahkohtowin_007, and only a single detection series of Canada Lynx was recorded at Wahkohtowin_008, consistent with the low diversity values shown in @fig-shannon. The reduced species diversity observed at the northern sites likely reflects broader ecoregional differences, with tundra and James Bay Lowlands habitats supporting fewer species than the warmer, more diverse southern forested regions. Overall, we also observed a modest shift in community composition among nation deployments, as illustrated in @fig-community.
 
 ```{r}
 #| warning: false
@@ -417,17 +444,27 @@ plot_RDA <- ggplot(data = t3scores, aes(x = RDA1, y = PC1)) +
 
 plot_RDA
 
+
+
 ```
+
+There weren't enough sites to accurately describe a shift in community between any of the nations or regions (splitting by north or south). Additional sampling at sites can help to describe this into the future.
 
 # Discussion
 
 ## Recommendations
 
-For acoustic sites, it is important to ensure independence of sampling locations to ensure that detections can be inferred in a spatially independent way. CCFN_007 and CCFN_008 were placed <100 m from one another, meaning that the acoustic sampling area each ARU was sampling was likely overlapping, similar and not independent due to the effective detection radius of the ARUs. In a passive acoustic monitoring context, a minimum distance of 300 m is recommended. To ensure the integrity and consistency of a long-term monitoring program, it is important to maintain a consistent survey schedule and timing each year when deploying ARUs. This consistency helps reduce variation caused by seasonal differences in species presence or activity. Additionally, the importance of regular maintenance and calibration of ARU equipment, particularly microphones, which degrade over time and can affect data quality if not properly managed after prolonged field use (see @arus-mics). Surveying locations with a history of monitoring over multiple years is key to tracking changes in species composition and detecting long-term trends.
+## Acoustic
+
+For acoustic sites, it is important to ensure independence of sampling locations to ensure that detections can be inferred in a spatially independent way. CCFN_007 and CCFN_008 were placed \<100 m from one another, meaning that the acoustic sampling area each ARU was sampling was likely overlapping, similar and not independent due to the effective detection radius of the ARUs. In a passive acoustic monitoring context, a minimum distance of 300 m is recommended. To ensure the integrity and consistency of a long-term monitoring program, it is important to maintain a consistent survey schedule and timing each year when deploying ARUs. This consistency helps reduce variation caused by seasonal differences in species presence or activity. Additionally, the importance of regular maintenance and calibration of ARU equipment, particularly microphones, which degrade over time and can affect data quality if not properly managed after prolonged field use (see @arus-mics). Surveying locations with a history of monitoring over multiple years is key to tracking changes in species composition and detecting long-term trends.
+
+## Cameras
 
 Cameras should be deployed and oriented to maximize detection probability while minimizing obstructions and false triggers. Camera‐trap studies consistently show that vegetation blockage, poor sightlines, and inappropriate angles can substantially reduce wildlife detections and bias monitoring results. Cameras should therefore be placed along likely travel corridors (e.g., trails, habitat edges, riparian crossings) with clear views of the detection zone, and nearby grasses or branches should be trimmed up to 5 meters to prevent regular wind-driven triggers. Placement height (standard height of 1.5 meters) and angle (90 degrees or straight ahead) should be standardized for target species, and cameras should avoid facing open water or dense vegetation where movement and glare (i.e. facing cameras north) can reduce image quality and increase non-target captures. Implementing these best practices will improve detection consistency across sites and strengthen future occupancy and community assessments.
 
-By including sites with both high and low species diversity, we can better understand how habitats and species ranges are shifting over time. Sites where species-at-risk are present are also prioritized to support conservation efforts. Together, these considerations inform the prioritized list of key sampling sites across the Mushkegowuk Council region, as summarized in @tbl-prioritization.
+## Site and species prioritization
+
+By including sites with both high and low species diversity, we can better understand how habitats and species ranges are shifting over time. Sites where species-at-risk are present are also prioritized to support conservation efforts. Together, these considerations inform the prioritized list of key sampling sites across the Mushkegowuk Council region, as summarized in @tbl-prioritization. Further sampling can help to explain species shifts in regions.
 
 ```{r}
 #| warning: false
