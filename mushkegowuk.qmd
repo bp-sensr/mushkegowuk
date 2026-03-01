@@ -62,7 +62,7 @@ load('mushkegowuk.RData')
 
 # Abstract
 
-In 2025, the Mushkegowuk Council launched a wildlife monitoring program using autonomous recording units (ARUs) for passive acoustic surveying alongside remote cameras for visual detection. This report summarizes the key findings from the initiative and provides recommendations to guide future monitoring efforts.
+In 2024, the Mushkegowuk Council launched a community-based wildlife monitoring program.This project involves working with Mushkegowuk Nations and using trail cameras (movement triggered cameras) and audio recorders (Song Meter Mini 2) to collect information about the presence, movements and habitat of mammals, birds, and frogs within the Mushkegowuk Territory. Additionally increase capacity for members of Mushkegowuk Nations to engage in monitoring activities. This project provides an opportunity to begin developing capacity amongst community members to combine scientific methods and Indigenous knowledge in the collection and production of baseline information. This report summarizes the key findings from the pilot phase of the initiative and provides recommendations to guide future monitoring efforts.
 
 ::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
 This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.
@@ -106,14 +106,14 @@ mc_locs <- wt_get_view("organization_locations", organization = 5843) |>
 
 # Introduction
 
-ARUs and cameras are compact environmental sensors that are designed to passively record the environment. ARUs (@aru-overview) capture vocalizing species like birds and amphibians, whereas cameras are mainly designed to detect and medium to large-sized animals. The use of these sensors for environmental monitoring is growing in use across the globe (@lots-of-pam) as this technology enables resource managers to conduct prolonged surveys with minimal human interference. The subsequent data collected by these units contribute valuable information to metrics that can be used to aid decision-making and management. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing.
+ARUs and trail cameras are compact environmental sensors that are designed to passively record the environment. ARUs (@aru-overview) capture vocalizing species like birds and amphibians, whereas cameras are mainly designed to detect  medium to large-sized animals. The use of these sensors for environmental monitoring is growing in use across the globe (@lots-of-pam) as this technology enables resource managers to conduct prolonged surveys with minimal human interference. The subsequent data collected by these units contribute valuable information to metrics that can be used to aid decision-making and management. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing.
 
-The report summarizes the data collected from the ARUs and cameras deployed by the Mushkegowuk Council in 2025. To enhance accessibility and reproducibility, the findings will be presented in this online report with fully documented code, allowing future updates as data collection methods become standardized. Additionally, recommendations will be developed to refine data transcription priorities, improve annual reporting methods, and evaluate recommendations for long-term monitoring. The objectives of this report are to:
+The report summarizes the data collected from the ARUs and trail cameras deployed by Mushkegowuk Nations and their community members with the support ofMushkegowuk Council in 2024-2025. To enhance accessibility and reproducibility, the findings will be presented in this online report with fully documented code, allowing future updates as data collection methods become standardized. Additionally, recommendations will be developed to refine data transcription priorities, improve annual reporting methods, and evaluate recommendations for long-term monitoring. The objectives of this report are to:
 
--   Document and standardize the data management and processing procedures for acoustic data collected to ensure consistency and reproducibility.
--   Provide a comprehensive report detailing all detected species and the abundance of individuals within the surveyed area.
--   Facilitate the publication of data, making it accessible to the community, public, resource managers, academic institutions, and other relevant agencies to promote transparency and collaboration.
--   Use evaluation results to establish robust metrics that can inform long-term monitoring and conservation strategies.
+- Document and standardize the data management and processing procedures for acoustic data collected to ensure consistency and reproducibility.
+- Provide a comprehensive report detailing all detected species and the abundance of individuals within the surveyed area.
+- Facilitate the publication of data, making it accessible to the community, public, resource managers, academic institutions, and other relevant agencies to promote transparency and collaboration.
+- Use evaluation results to establish robust metrics that can inform long-term monitoring and conservation strategies.
 
 # Methods
 
@@ -140,8 +140,8 @@ mc_locs_sf <- mc_locs |>
   sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)
 
 pal <- colorFactor(
-  palette = c("ARU" = "#1f78b4", "CAM" = "#33a02c", "ARU + CAM" = "#e31a1c"),
-  domain  = mc_locs_sf$sensors
+  palette = c("Chapleau Cree First Nation" = "#1f78b4", "Kashechewan First Nation" = "#33a02c", " " = "#e31a1c"),
+  domain  = mc_locs_sf$nation
 )
 
 leaflet(mc_locs_sf) %>%
@@ -152,15 +152,15 @@ leaflet(mc_locs_sf) %>%
       "<b>Nation:</b> ", nation, "<br>",
       "<b>Sensors:</b> ", sensors
     ),
-    fillColor   = ~pal(sensors),
+    fillColor   = ~pal(nation),
     color       = "black",
     fillOpacity = 1,
     radius      = 6
   ) %>%
   addLegend(
     pal = pal,
-    values = ~sensors,
-    title = "Sensors"
+    values = ~nation,
+    title = "Nation"
   ) %>%
   addMeasure(primaryLengthUnit = "meters", primaryAreaUnit = "sqmeters") %>%
   addMiniMap(position = "bottomleft")
@@ -190,6 +190,12 @@ datatable(mc_locs_sf |> mutate(
 ```
 
 ```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: false
+#| collapse: true
 
 mc_recs <- wt_get_view("organization_recordings", organization = 5843)
 
@@ -218,9 +224,14 @@ project_spp <- wt_get_project_species(3919)
 
 ## Data processing
 
+[WildTrax](https://www.wildtrax.ca) is an online platform developed by the [Alberta Biodiversity Monitoring Institute (**ABMI**)](https://abmi.ca) for users of environmental sensors to help address big data challenges by providing solutions to standardize, harmonize, and share data. The platform supports data collected from autonomous recording units (ARUs) and camera traps, two of the most widely deployed remote sensing technologies in wildlife monitoring. ARUs passively record acoustic data and are particularly effective for detecting birds and other vocalizing species across large spatial extents, while camera traps provide photographic records of wildlife activity at fixed locations.
+WildTrax provides an end-to-end workflow for environmental sensor data, from upload and storage through to processing, species tagging, and data publication. A key feature of the platform is its standardized tagging protocol, which allows observers to assign species identifications, individual counts, and behavioural annotations to recordings and images. This standardization enables data collected across different organizations, regions, and time periods to be integrated and compared, which is a critical requirement for large-scale biodiversity monitoring programs.
+
+Data processed through WildTrax can be accessed and downloaded via the platform's public data portal or through the wildRtrax R package, which provides programmatic access to WildTrax data for downstream analysis. The wildRtrax package facilitates reproducible workflows by allowing users to query, filter, and format WildTrax data directly within R.
+
 ### Acoustic data
 
-Recordings and images were uploaded to [WildTrax](https://www.wildtrax.ca) for processing and can be downloaded from the platform's Recordings and Image Sets tab. WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute (**ABMI**)](https://abmi.ca) for users of environmental sensors to help addresses these big data challenges by providing solutions to standardize, harmonize, and share data.
+Recordings were uploaded to  for processing and can be downloaded from the platform's Recordings tab in the Organization.
 
 ![](assets/imagesets.png)
 
@@ -228,7 +239,7 @@ Recordings and images were uploaded to [WildTrax](https://www.wildtrax.ca) for p
 Advanced users can also use `wildrtrax` with `wt_get_sync(api = "organization_recordings", organization = 5843)`. Ensure you have correct access to the Organization as these projects are not currently published `r Sys.Date()`.
 :::
 
-The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, we randomly selected recordings 8 recordings per location. Four were processed for 3-minutes between the hours of 3:00 AM - 7:59 AM (dawn period) and four between 20:00 - 23:59 PM (dusk period), ideally on four separate dates. Each of the selections were also chosen on days that did not have any inclement weather (heavy rain or wind), which would be unfavourable for bird surveys. Four samples ensures that there is minimum number of samples being able to detect most species. Tags are made using count-removal (see @farnsworth2002removal, @time-removal) where tags are only made at the time of first detection of each individual heard on the recordings. Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of "calling intensity index" (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. We also verified that all tags that were created were checked by a second observer to ensure accuracy of detections (@tbl-verified and @tbl-cam-verified). In addition to human transcription, we also ensured that species were not missed at the location level using additional information from HawkEars (@huus2025hawkears) and at the task level to avoid false negatives. After the data are processed in WildTrax, the [wildrtrax](https://abbiodiversity.github.io/wildrtrax/) package is used to download the data into a standard format prepared for analysis. The `wt_download_report` function downloads the data directly to a R framework for easy manipulation (see [wildrtrax APIs](https://abbiodiversity.github.io/wildrtrax/articles/apis.html)).
+The principal goal for data processing was to describe the acoustic community of species heard at locations while choosing a large enough subset of recordings for analyses. To ensure balanced replication, we randomly selected 8 recordings per location. Four were processed for 3-minutes between the hours of 3:00 AM - 7:59 AM (dawn period) and four between 20:00 - 23:59 PM (dusk period), ideally on four separate dates. Each of the selections were also chosen on days that did not have any inclement weather (heavy rain or wind), which would be unfavourable for bird surveys. Four samples ensures that there is a minimum number of samples being able to detect most species. Tags are made using count-removal (@farnsworth2002removal, @time-removal) where tags are only made at the time of first detection of each individual heard on the recordings. Amphibian abundance was estimated at the time of first detection using the [North American Amphibian Monitoring Program](https://www.usgs.gov/centers/eesc/science/north-american-amphibian-monitoring-program) with abundance of species being estimated on the scale of “calling intensity index” (CI) of 1 - 3. Mammals such as Red Squirrel, were also noted on the recordings. We also verified that all tags that were created were checked by a second observer to ensure accuracy of detections (@tbl-verified and @tbl-cam-verified). In addition to human transcription, we also ensured that species were not missed at the location level using additional information from HawkEars (@huus2025hawkears), a North American multi-species acoustic classifier, at the task level to avoid false negatives, or missed detections by the tagger. After the data are processed in WildTrax, the wildrtrax package is used to download the data into a standard format prepared for analysis. The wt_download_report function downloads the data directly to a R framework for easy manipulation(see [wildrtrax APIs](https://abbiodiversity.github.io/wildrtrax/articles/apis.html)).
 
 ```{r}
 #| warning: false
@@ -298,7 +309,9 @@ datatable(verified_cam_tags,
 
 ## Analysis
 
-To evaluate species richness and activity patterns, we grouped the data by year and location using the `dplyr` R package identifying unique species detected in tasks processed within WildTrax. This enabled the creation of species richness and activity plots for the results using `ggplot`. We used the `vegan` package in R to construct a species accumulation curve, assessing the sampling effort required to capture species richness. The analysis utilized a species-by-site matrix and employed a randomized accumulation method with 100 permutations to provide robust estimates of species richness as sampling sites increased. To support site prioritization, we created a composite score through a weighted sum of three factors: the need for repeat surveys, the species richness observed at each site, and any existing project-specific priorities, here, any species-at-risk.
+To understand which species were detected and how often, we grouped detections by year and location, then counted the unique species recorded at each site. This allowed us to summarize species richness, the number of different species detected, and visualize how detections varied across sites and over time. We also calculated Shannon's diversity index for each site, which is a single number that captures both how many species were detected and how evenly individuals were distributed among those species. A higher score indicates a site where many different species were each detected a similar number of times, while a lower score indicates a site dominated by one or two common species with few others present.
+
+Finally, we developed a site prioritization score to help identify which locations should be targeted for future surveys. Each site received a score based on three factors: whether it had been surveyed enough times, how many species were detected there, and whether any species at risk had been recorded. These factors were combined into a single score to rank sites by their monitoring value.
 
 # Results
 
@@ -366,7 +379,7 @@ datatable(all_clean |> pivot_wider(names_from = species_common_name, values_from
 #| include: true
 #| results: hide
 #| fig-align: center
-#| fig-cap: Shannon diversity index at each location
+#| fig-cap: Shannon diversity index at each location. A site with a high Shannon diversity index had many species detected in roughly equal numbers. A site with a low score was dominated by one or two common species, with few others present.
 #| label: fig-shannon
 #| cap-location: bottom
 #| code-fold: true
@@ -399,7 +412,7 @@ shannon_d |>
 #| include: true
 #| results: hide
 #| fig-align: center
-#| fig-cap: Species associations for the northern and southern half of the region
+#| fig-cap: Species associations for the northern and southern half of the region. Species that have larger arrows display a stronger difference between the regions. However, since the southern ellipse is so small, there is no significant difference in species composition between the two regions.
 #| label: fig-community
 #| cap-location: bottom
 #| code-fold: true
@@ -469,7 +482,7 @@ By including sites with both high and low species diversity, we can better under
 ```{r}
 #| warning: false
 #| echo: true
-#| eval: false
+#| eval: true
 #| message: false
 #| include: true
 #| collapse: true
@@ -477,39 +490,39 @@ By including sites with both high and low species diversity, we can better under
 #| label: tbl-prioritization
 #| tbl-cap: Prioritization
 
-repeat_priority <- locs_summary |>
-  rowwise() |>
-  mutate(priority = sum(c_across(`2022`:`2024`), na.rm = TRUE)) |>
-  ungroup() |>
-  arrange(-priority)
+species_at_risk <- c(
+  "Bald Eagle", "Bank Swallow", "Barn Swallow", "Black Tern", "Bobolink",
+  "Canada Warbler", "Common Nighthawk", "Evening Grosbeak", "Golden Eagle",
+  "Horned Grebe", "Hudsonian Godwit", "Lesser Yellowlegs", "Olive-sided Flycatcher",
+  "Peregrine Falcon", "Red Knot", "Red-necked Phalarope", "Rusty Blackbird",
+  "Short-eared Owl", "Wood Thrush", "Yellow Rail",
+  "Lake Sturgeon, Southern Hudson Bay-James Bay populations",
+  "Northern Brook Lamprey", "Gypsy Cuckoo Bumble Bee", "Monarch",
+  "Suckley's Cuckoo Bumble Bee", "Transverse Lady Beetle", "Yellow-banded Bumble Bee",
+  "Flooded Jellyskin", "Eastern Red Bat", "Eastern Wolf", "Hoary Bat",
+  "Little Brown Myotis", "Migratory Caribou, Eastern Migratory Population",
+  "Mountain Lion (Cougar)", "Northern Myotis", "Polar Bear", "Ringed Seal",
+  "Silver-haired Bat", "Wolverine",
+  "Atlantic Walrus, South and East Hudson Bay Population",
+  "Woodland caribou, Boreal Population", "Black Ash", "Blanding's Turtle",
+  "Snapping Turtle", "Midland Painted Turtle"
+)
 
-rich_priority <- spp_rich_location |> group_by(location) |> summarise(priority = mean(species_count)) |> arrange(-priority)
-
-soi_priority <- mc_main |>
-  filter(species_common_name %in% soi) |>
-  select(location, latitude, longitude, recording_date_time, species_common_name)  |>
+site_priority <- all_clean |>
   group_by(location) |>
-  summarise(priority = n_distinct(species_common_name))
-
-prioritization_matrix <- repeat_priority |>
-  rename(location = Location) |>
-  left_join(rich_priority, by = "location", suffix = c("_repeat", "_rich")) |>
-  left_join(soi_priority, by = "location", suffix = c("", "_soi")) |>
+  summarise(all_species = n_distinct(species_common_name),
+            sar_species_detected = n_distinct(species_common_name[species_common_name %in% species_at_risk]),
+            species_list = ifelse(any(species_common_name %in% species_at_risk), 
+                                  paste(sort(unique(species_common_name[species_common_name %in% species_at_risk])), collapse = ", "), "None detected")) |>
   mutate(
-    priority_repeat = ifelse(is.na(priority_repeat), 0, priority_repeat),
-    priority_rich = ifelse(is.na(priority_rich), 0, priority_rich),
-    priority = ifelse(is.na(priority), 0, priority)
-  ) |>
-  mutate(combined_priority = priority_repeat * 2 + priority_rich + priority) |> # Created a weighted-sum
-  select(location, combined_priority) |>
-  arrange(-combined_priority)
+    priority = case_when(sar_species_detected >= 5 ~ "Critical", sar_species_detected >= 3 ~ "High", sar_species_detected >= 1 ~ "Medium", TRUE ~ "Low")) |>
+  arrange(desc(sar_species_detected))
 
-datatable(prioritization_matrix, 
-          options = list(
-            searching = TRUE,  
-            paging = TRUE,    
-            pageLength = 10   
-          ))
+datatable(site_priority,
+          options = list(pageLength = 20, scrollX = TRUE),
+          rownames = FALSE,
+          colnames = c("Location", "Total Species", "SAR Species Detected", "SAR Species", "Priority"))
+
 ```
 
-As this monitoring is led by Indigenous communities, it is guided by local knowledge, values, and priorities to protect the land and wildlife. By combining new technologies and sampling technique with traditional knowledge, the program contributes to building a comprehensive, long-term understanding of biodiversity in the region. Ongoing monitoring will help track the impacts of climate change. This information will help to support communities in protecting their environment and cultural connections while strengthening resilience for the future.
+As this monitoring is led by Indigenous communities, it is guided by local knowledge, values, and priorities to protect the land and wildlife. By combining new technologies and sampling techniques with traditional knowledge, the program contributes to building a comprehensive, long-term understanding of biodiversity in the region. Ongoing monitoring will help track the impacts of climate change. This information will help to support communities in protecting their environment and cultural connections while strengthening resilience for the future.
