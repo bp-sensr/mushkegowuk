@@ -415,7 +415,7 @@ shannon_d |>
 #| include: true
 #| results: hide
 #| fig-align: center
-#| fig-cap: Species associations for the northern and southern half of the region. Species that have larger arrows display a stronger difference between the regions. However, since the southern ellipse is so small, there is no significant difference in species composition between the two regions.
+#| fig-cap: Species associations across northern and southern nations based on RDA1 and PC1 ordination axes. The ellipses show partial separation along RDA1, with northern sites associated with positive RDA1 scores and southern sites with negative RDA1 scores, suggesting some difference in species composition between regions. However, given the small number of sites per nation and the degree of ellipse overlap, this difference should be interpreted cautiously. White-throated Sparrow shows the strongest directional association among species vectors.
 #| label: fig-community
 #| cap-location: bottom
 #| code-fold: true
