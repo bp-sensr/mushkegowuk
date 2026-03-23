@@ -37,7 +37,7 @@ github: https://github.com/biodiversitypathways/mushkegowuk
 
 ```{r}
 #| label: load-packages and authenticate
-#| include: false
+#| include: true
 #| echo: false
 #| eval: true
 #| warning: false
@@ -197,7 +197,7 @@ datatable(mc_locs_sf |> mutate(
 #| echo: false
 #| eval: true
 #| message: false
-#| include: false
+#| include: true
 #| collapse: true
 
 mc_recs <- wt_get_view("organization_recordings", organization = 5843)
