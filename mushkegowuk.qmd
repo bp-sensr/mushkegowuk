@@ -94,8 +94,8 @@ mc_cam <- wt_get_projects("CAM") |>
 mc_locs <- wt_get_view("organization_locations", organization = 5843) |>
   mutate(nation = case_when(grepl("CCFN", locationName) ~ "Chapleau Cree First Nation",
                             grepl("KFN",  locationName) ~ "Kashechewan First Nation",
-                            grepl("MCSM", locationName) ~ "Fort Albany First Nation",
-                            grepl("Wahkohtowin", locationName) ~ "",
+                            grepl("FAFN", locationName) ~ "Fort Albany First Nation",
+                            grepl("Wahkohtowin", locationName) ~ "Wahkohtowin",
                             TRUE ~ NA_character_)) |>
   mutate(sensors = case_when(recordingCount > 0 & imageCount > 0 ~ "ARU + CAM", 
                              recordingCount > 0 ~ "ARU", 
@@ -140,8 +140,10 @@ mc_locs_sf <- mc_locs |>
   sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)
 
 pal <- colorFactor(
-  palette = c("Chapleau Cree First Nation" = "#1f78b4", "Kashechewan First Nation" = "#33a02c", " " = "#e31a1c"),
-  domain  = mc_locs_sf$nation
+  palette  = c("#1f78b4", "#33a02c", "#e31a1c" , "purple"),
+  levels   = c("Chapleau Cree First Nation", "Kashechewan First Nation", "Fort Albany First Nation", "Wahkohtowin"),
+  domain   = mc_locs_sf$nation,
+  na.color = "gray"
 )
 
 leaflet(mc_locs_sf) %>%
@@ -158,9 +160,10 @@ leaflet(mc_locs_sf) %>%
     radius      = 6
   ) %>%
   addLegend(
-    pal = pal,
-    values = ~nation,
-    title = "Nation"
+    pal      = pal,
+    values   = ~nation,
+    title    = "Nation",
+    na.label = "Unknown"
   ) %>%
   addMeasure(primaryLengthUnit = "meters", primaryAreaUnit = "sqmeters") %>%
   addMiniMap(position = "bottomleft")
@@ -327,7 +330,7 @@ A total of `r length(unique(all_clean$species_common_name))` species were detect
 #| code-fold: true
 
 mc_aru_clean <- mc_aru |> 
-  wt_tidy_species(remove = c("mammal","amphibian","abiotic","insect","unknown"), zerofill = F) |>
+  wt_tidy_species(remove = c("mammal","abiotic","insect","unknown"), zerofill = F) |>
   inner_join(wt_get_species() |> select(species_common_name, species_class, species_order), by = "species_common_name") |>
   select(location, recording_date_time, species_common_name, individual_order) |>
   distinct() |>
@@ -348,7 +351,7 @@ mc_cam_clean <- mc_cam |>
   relocate(nation, .after = location) |>
   relocate(sensors, .after = nation)
 
-all_clean <- bind_rows(shannon_d_aru, shannon_d_cam)
+all_clean <- bind_rows(mc_aru_clean, mc_cam_clean)
   
 ```
 
@@ -419,7 +422,7 @@ shannon_d |>
 
 wide <- all_clean |>
   distinct() |>
-  mutate(ns = case_when(grepl('CCFN)|Wahkohtowin',location) ~ "South", TRUE ~ "North")) |>
+  mutate(ns = case_when(grepl('CCFN|Wahkohtowin',location) ~ "South", TRUE ~ "North")) |>
   group_by(location, nation, sensors, ns) |>
   pivot_wider(names_from = species_common_name, values_from = total_count, values_fill = 0, values_fn = sum)
 
@@ -508,20 +511,47 @@ species_at_risk <- c(
   "Snapping Turtle", "Midland Painted Turtle"
 )
 
+amphs <- mc_aru_clean |>
+  select(species_common_name) |>
+  distinct() |>
+  inner_join(wt_get_species() |> filter(species_class == "AMPHIBIA"), by = "species_common_name") |>
+  pull(species_common_name)
+
 site_priority <- all_clean |>
   group_by(location) |>
-  summarise(all_species = n_distinct(species_common_name),
-            sar_species_detected = n_distinct(species_common_name[species_common_name %in% species_at_risk]),
-            species_list = ifelse(any(species_common_name %in% species_at_risk), 
-                                  paste(sort(unique(species_common_name[species_common_name %in% species_at_risk])), collapse = ", "), "None detected")) |>
+  summarise(
+    all_species          = n_distinct(species_common_name),
+    sar_species_detected = n_distinct(species_common_name[species_common_name %in% species_at_risk]),
+    amphs_detected       = n_distinct(species_common_name[species_common_name %in% amphs]),
+    species_list         = ifelse(
+      any(species_common_name %in% species_at_risk),
+      paste(sort(unique(species_common_name[species_common_name %in% species_at_risk])), collapse = ", "),
+      "None detected"
+    )
+  ) |>
   mutate(
-    priority = case_when(sar_species_detected >= 5 ~ "Critical", sar_species_detected >= 3 ~ "High", sar_species_detected >= 1 ~ "Medium", TRUE ~ "Low")) |>
-  arrange(desc(sar_species_detected))
+    priority = case_when(
+      sar_species_detected >= 5 ~ "Critical",
+      sar_species_detected >= 3 ~ "High",
+      sar_species_detected >= 1 ~ "Medium",
+      TRUE                      ~ "Low"
+    ),
+    priority_score = case_when(
+      priority == "Critical" ~ 4,
+      priority == "High"     ~ 3,
+      priority == "Medium"   ~ 2,
+      priority == "Low"      ~ 1
+    ),
+    combined_priority = round((priority_score * 2 + amphs_detected + priority_score), 2)
+  ) |>
+  arrange(desc(combined_priority)) |>
+  select(-species_list) |>
+  distinct()
 
 datatable(site_priority,
           options = list(pageLength = 20, scrollX = TRUE),
           rownames = FALSE,
-          colnames = c("Location", "Total Species", "SAR Species Detected", "SAR Species", "Priority"))
+          colnames = c("Location", "Total Species", "SAR Species Detected", "Amphibians Detected", "Priority", "Priority Score", "Combined Priority"))
 
 ```
 
