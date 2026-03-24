@@ -71,9 +71,9 @@ This report is dynamically generated, meaning its results may evolve with the ad
 ```{r Data download}
 #| warning: false
 #| message: false
-#| echo: true
+#| echo: false
 #| eval: false
-#| include: true
+#| include: false
 #| code-fold: true
 
 # Download data from WildTrax
@@ -123,13 +123,14 @@ A total of `r length(unique(mc_locs$locationName))` were surveyed in 2025 (@fig-
 
 ```{r}
 #| warning: false
-#| echo: true
+#| echo: false
 #| eval: true
 #| message: false
 #| include: true
 #| collapse: true
 #| code-fold: true
 #| fig-align: center
+#| fig-width: 8
 #| fig-cap: Locations from Mushkegowuk Council
 #| label: fig-monitoring-locations
 
@@ -146,7 +147,7 @@ pal <- colorFactor(
   na.color = "gray"
 )
 
-leaflet(mc_locs_sf) %>%
+m <- leaflet(mc_locs_sf) %>%
   addTiles() %>%
   addCircleMarkers(
     popup = ~paste0(
@@ -167,6 +168,14 @@ leaflet(mc_locs_sf) %>%
   ) %>%
   addMeasure(primaryLengthUnit = "meters", primaryAreaUnit = "sqmeters") %>%
   addMiniMap(position = "bottomleft")
+
+if (knitr::is_html_output()) {
+  m
+} else {
+  map_file <- "map_aru_locations.png"
+  if (!file.exists(map_file)) mapview::mapshot2(m, file = map_file)
+  knitr::include_graphics(map_file)
+}
 
 ```
 
@@ -230,7 +239,7 @@ project_spp <- wt_get_project_species(3919)
 [WildTrax](https://www.wildtrax.ca) is an online platform developed by the [Alberta Biodiversity Monitoring Institute (**ABMI**)](https://abmi.ca) for users of environmental sensors to help address big data challenges by providing solutions to standardize, harmonize, and share data. The platform supports data collected from autonomous recording units (ARUs) and camera traps, two of the most widely deployed remote sensing technologies in wildlife monitoring. ARUs passively record acoustic data and are particularly effective for detecting birds and other vocalizing species across large spatial extents, while camera traps provide photographic records of wildlife activity at fixed locations.
 WildTrax provides an end-to-end workflow for environmental sensor data, from upload and storage through to processing, species tagging, and data publication. A key feature of the platform is its standardized tagging protocol, which allows observers to assign species identifications, individual counts, and behavioural annotations to recordings and images. This standardization enables data collected across different organizations, regions, and time periods to be integrated and compared, which is a critical requirement for large-scale biodiversity monitoring programs.
 
-Data processed through WildTrax can be accessed and downloaded via the platform's public data portal or through the wildRtrax R package, which provides programmatic access to WildTrax data for downstream analysis. The wildRtrax package facilitates reproducible workflows by allowing users to query, filter, and format WildTrax data directly within R.
+Data processed through WildTrax can be accessed and downloaded via the platform's public data portal or through the [wildRtrax R package](https://abbiodiversity.github.io/wildrtrax/), which provides programmatic access to WildTrax data for downstream analysis. The wildRtrax package facilitates reproducible workflows by allowing users to query, filter, and format WildTrax data directly within R.
 
 ### Acoustic data
 
@@ -322,10 +331,10 @@ A total of `r length(unique(all_clean$species_common_name))` species were detect
 
 ```{r}
 #| warning: false
-#| echo: true
+#| echo: false
 #| eval: true
 #| message: false
-#| include: true
+#| include: false
 #| results: hide
 #| code-fold: true
 
@@ -376,7 +385,7 @@ datatable(all_clean |> pivot_wider(names_from = species_common_name, values_from
 
 ```{r}
 #| warning: false
-#| echo: true
+#| echo: false
 #| eval: true
 #| message: false
 #| include: true
@@ -409,7 +418,7 @@ shannon_d |>
 
 ```{r}
 #| warning: false
-#| echo: true
+#| echo: false
 #| eval: true
 #| message: false
 #| include: true
@@ -460,11 +469,9 @@ plot_RDA <- ggplot(data = t3scores, aes(x = RDA1, y = PC1)) +
 
 plot_RDA
 
-
-
 ```
 
-There weren't enough sites to accurately describe a shift in community between any of the nations or regions (splitting by north or south). Additional sampling at sites can help to describe this into the future.
+Species composition showed partial separation between northern and southern nations along the RDA1 and PC1 ordination axes, with northern sites tending toward positive RDA1 scores and southern sites toward negative scores. While this suggests some difference in community composition between regions, the small number of sites per nation and the degree of ellipse overlap mean this pattern should be interpreted cautiously. White-throated Sparrow showed the strongest directional association among species. Additional sampling at sites will help clarify and confirm this trend in the future.
 
 # Discussion
 
@@ -484,7 +491,7 @@ By including sites with both high and low species diversity, we can better under
 
 ```{r}
 #| warning: false
-#| echo: true
+#| echo: false
 #| eval: true
 #| message: false
 #| include: true
