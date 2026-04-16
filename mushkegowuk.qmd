@@ -109,14 +109,14 @@ mc_locs <- wt_get_view("organization_locations", organization = 5843) |>
 
 # Introduction
 
-ARUs and trail cameras are compact environmental sensors that are designed to passively record the environment. ARUs (@aru-overview) capture vocalizing species like birds and amphibians, whereas cameras are mainly designed to detect  medium to large-sized animals. The use of these sensors for environmental monitoring is growing in use across the globe (@lots-of-pam) as this technology enables resource managers to conduct prolonged surveys with minimal human interference. The subsequent data collected by these units contribute valuable information to metrics that can be used to aid decision-making and management. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing.
+ARUs and trail cameras are compact environmental sensors that are designed to passively record the environment. ARUs (@aru-overview) capture vocalizing species like birds and amphibians, whereas cameras are mainly designed to detect medium to large-sized animals. The use of these sensors for environmental monitoring is growing in use across the globe (@lots-of-pam) as this technology enables resource managers to conduct prolonged surveys with minimal human interference. The subsequent data collected by these units contribute valuable information to metrics that can be used to aid decision-making and management. Given the rapid and ease of accumulating data from these units, maintaining a high standard of data integrity is paramount to ensure future data interoperability and sharing.
 
 The report summarizes the data collected from the ARUs and trail cameras deployed by Mushkegowuk Nations and their community members with the support ofMushkegowuk Council in 2024-2025. To enhance accessibility and reproducibility, the findings will be presented in this online report with fully documented code, allowing future updates as data collection methods become standardized. Additionally, recommendations will be developed to refine data transcription priorities, improve annual reporting methods, and evaluate recommendations for long-term monitoring. The objectives of this report are to:
 
-- Document and standardize the data management and processing procedures for acoustic data collected to ensure consistency and reproducibility.
-- Provide a comprehensive report detailing all detected species and the abundance of individuals within the surveyed area.
-- Facilitate the publication of data, making it accessible to the community, public, resource managers, academic institutions, and other relevant agencies to promote transparency and collaboration.
-- Use evaluation results to establish robust metrics that can inform long-term monitoring and conservation strategies.
+-   Document and standardize the data management and processing procedures for acoustic data collected to ensure consistency and reproducibility.
+-   Provide a comprehensive report detailing all detected species and the abundance of individuals within the surveyed area.
+-   Facilitate the publication of data, making it accessible to the community, public, resource managers, academic institutions, and other relevant agencies to promote transparency and collaboration.
+-   Use evaluation results to establish robust metrics that can inform long-term monitoring and conservation strategies.
 
 # Methods
 
@@ -239,14 +239,13 @@ project_spp <- wt_get_project_species(3919)
 
 ## Data processing
 
-[WildTrax](https://www.wildtrax.ca) is an online platform developed by the [Alberta Biodiversity Monitoring Institute (**ABMI**)](https://abmi.ca) for users of environmental sensors to help address big data challenges by providing solutions to standardize, harmonize, and share data. The platform supports data collected from autonomous recording units (ARUs) and camera traps, two of the most widely deployed remote sensing technologies in wildlife monitoring. ARUs passively record acoustic data and are particularly effective for detecting birds and other vocalizing species across large spatial extents, while camera traps provide photographic records of wildlife activity at fixed locations.
-WildTrax provides an end-to-end workflow for environmental sensor data, from upload and storage through to processing, species tagging, and data publication. A key feature of the platform is its standardized tagging protocol, which allows observers to assign species identifications, individual counts, and behavioural annotations to recordings and images. This standardization enables data collected across different organizations, regions, and time periods to be integrated and compared, which is a critical requirement for large-scale biodiversity monitoring programs.
+[WildTrax](https://www.wildtrax.ca) is an online platform developed by the [Alberta Biodiversity Monitoring Institute (**ABMI**)](https://abmi.ca) for users of environmental sensors to help address big data challenges by providing solutions to standardize, harmonize, and share data. The platform supports data collected from autonomous recording units (ARUs) and camera traps, two of the most widely deployed remote sensing technologies in wildlife monitoring. ARUs passively record acoustic data and are particularly effective for detecting birds and other vocalizing species across large spatial extents, while camera traps provide photographic records of wildlife activity at fixed locations. WildTrax provides an end-to-end workflow for environmental sensor data, from upload and storage through to processing, species tagging, and data publication. A key feature of the platform is its standardized tagging protocol, which allows observers to assign species identifications, individual counts, and behavioural annotations to recordings and images. This standardization enables data collected across different organizations, regions, and time periods to be integrated and compared, which is a critical requirement for large-scale biodiversity monitoring programs.
 
 Data processed through WildTrax can be accessed and downloaded via the platform's public data portal or through the [wildRtrax R package](https://abbiodiversity.github.io/wildrtrax/), which provides programmatic access to WildTrax data for downstream analysis. The wildRtrax package facilitates reproducible workflows by allowing users to query, filter, and format WildTrax data directly within R.
 
 ### Acoustic data
 
-Recordings were uploaded to  for processing and can be downloaded from the platform's Recordings tab in the Organization.
+Recordings were uploaded to for processing and can be downloaded from the platform's Recordings tab in the Organization.
 
 ![](assets/imagesets.png)
 
