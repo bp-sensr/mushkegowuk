@@ -1,0 +1,15 @@
+name: protect
+on: { push: { branches: [main] } }
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: quarto-dev/quarto-actions/setup@v2
+      - run: quarto render lanz-and-cox.qmd
+      - run: npm i -g staticrypt && staticrypt lanz-and-cox.html -p "${{ secrets.SITE_PASSWORD }}"
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
