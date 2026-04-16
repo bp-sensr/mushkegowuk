@@ -11,6 +11,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r@v2
 
+      - name: Install R dependencies
+        run: |
+          Rscript -e 'install.packages(c("knitr", "rmarkdown"), repos="https://cloud.r-project.org")'
+
       - run: quarto render mushkegowuk.qmd
 
       - run: npm i -g staticrypt && staticrypt mushkegowuk.html -p "${{ secrets.SITE_PASSWORD }}"
