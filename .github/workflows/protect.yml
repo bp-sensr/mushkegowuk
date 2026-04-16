@@ -27,28 +27,29 @@ jobs:
 
       # 📦 R PACKAGES
       - name: Install R dependencies
-        run: |
-          Rscript -e 'install.packages(c(
-            "knitr",
-            "rmarkdown",
-            "dplyr",
-            "tidyr",
-            "purrr",
-            "lubridate",
-            "stringr",
-            "tibble",
-            "ggplot2",
-            "readr",
-            "leaflet",
-            "wildrtrax",
-            "sf",
-            "ggridges",
-            "kableExtra",
-            "plotly",
-            "DT",
-            "vegan",
-            "ggrepel"
-          ), repos="https://cloud.r-project.org")'
+  run: |
+    Rscript -e 'options(repos = c(CRAN = "https://cloud.r-project.org"));
+    install.packages("leaflet", dependencies = TRUE);
+    install.packages(c(
+      "knitr",
+      "rmarkdown",
+      "dplyr",
+      "tidyr",
+      "purrr",
+      "lubridate",
+      "stringr",
+      "tibble",
+      "ggplot2",
+      "readr",
+      "wildrtrax",
+      "sf",
+      "ggridges",
+      "kableExtra",
+      "plotly",
+      "DT",
+      "vegan",
+      "ggrepel"
+    ), dependencies = TRUE)'
 
       # 🧱 BUILD QUARTO
       - run: quarto render mushkegowuk.qmd
