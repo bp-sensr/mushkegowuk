@@ -46,7 +46,13 @@ github: https://github.com/biodiversitypathways/mushkegowuk
 #| warning: false
 #| message: false
 
-library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(lubridate)
+library(stringr)
+library(tibble)
+library(ggplot2)
 library(leaflet)
 library(wildrtrax)
 library(sf)
