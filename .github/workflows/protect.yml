@@ -13,7 +13,7 @@ jobs:
 
       - name: Install R dependencies
         run: |
-          Rscript -e 'install.packages(c("knitr", "rmarkdown"), repos="https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("knitr", "rmarkdown", "tidyverse"), repos="https://cloud.r-project.org")'
 
       - run: quarto render mushkegowuk.qmd
 
