@@ -7,8 +7,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: quarto-dev/quarto-actions/setup@v2
-      - run: quarto render lanz-and-cox.qmd
-      - run: npm i -g staticrypt && staticrypt lanz-and-cox.html -p "${{ secrets.SITE_PASSWORD }}"
+      - run: quarto render mushkegowuk.qmd
+      - run: npm i -g staticrypt && staticrypt mushkegowuk.html -p "${{ secrets.SITE_PASSWORD }}"
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
