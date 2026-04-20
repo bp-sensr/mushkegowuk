@@ -35,6 +35,7 @@ jobs:
         run: |
           Rscript -e 'options(repos = c(CRAN = "https://cloud.r-project.org"))'
           Rscript -e 'install.packages("leaflet", dependencies = TRUE)'
+          Rscript -e 'install.packages("remotes", dependencies = TRUE)'
           Rscript -e 'install.packages(c(
             "knitr",
             "rmarkdown",
@@ -46,7 +47,6 @@ jobs:
             "tibble",
             "ggplot2",
             "readr",
-            "wildrtrax",
             "sf",
             "ggridges",
             "kableExtra",
@@ -55,6 +55,7 @@ jobs:
             "vegan",
             "ggrepel"
           ), dependencies = TRUE)'
+          Rscript -e 'remotes::install_github("ABbiodiversity/wildrtrax")'
 
       - run: quarto render mushkegowuk.qmd
 
