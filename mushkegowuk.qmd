@@ -64,7 +64,7 @@ library(DT)
 library(vegan)
 library(ggrepel)
 
-#wt_auth()
+wt_auth()
 
 load('mushkegowuk.RData')
 #save.image('mushkegowuk.RData')
