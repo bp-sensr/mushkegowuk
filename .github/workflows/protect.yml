@@ -29,7 +29,7 @@ jobs:
 
       - name: Render document
         run: |
-          Rscript -e "rmarkdown::render('report.Rmd')"
+          Rscript -e "rmarkdown::render('mushkegowuk.Rmd')"
         # Or for a .qmd with R chunks:
         # quarto render report.qmd
 
@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: protected-report
-          path: report.html
+          path: mushkegowuk.html
