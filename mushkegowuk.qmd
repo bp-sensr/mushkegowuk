@@ -33,7 +33,8 @@ toc-depth: 3
 toc-expand: true
 toc-location: left
 styles: styles.css
-github: https://github.com/biodiversitypathways/mushkegowuk
+github: https://github.com/bp-sensr/mushkegowuk
+output: fidelius::html_password_protected
 ---
 
 ![](assets/banner.png)
@@ -213,12 +214,22 @@ datatable(mc_locs_sf |> mutate(
 ```{r}
 #| warning: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| message: false
 #| include: true
 #| collapse: true
 
 mc_recs <- wt_get_view("organization_recordings", organization = 5843)
+```
+
+
+```{r}
+#| warning: false
+#| echo: false
+#| eval: true
+#| message: false
+#| include: true
+#| collapse: true
 
 aru_spp <- mc_aru |>
   group_by(location, species_code) |>
