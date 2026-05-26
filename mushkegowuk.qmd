@@ -34,7 +34,10 @@ toc-expand: true
 toc-location: left
 styles: styles.css
 github: https://github.com/bp-sensr/mushkegowuk
-output: fidelius::html_password_protected
+output:
+  fidelius::html_password_protected:
+    password: !expr Sys.getenv("DOC_PASSWORD")
+    output_format: rmarkdown::html_document
 ---
 
 ![](assets/banner.png)
